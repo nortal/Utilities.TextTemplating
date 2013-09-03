@@ -6,9 +6,8 @@ This assembly provides a text template processing engine capable of merging data
 Requirements:
  * Microsoft .Net Framework 3.5 Client Profile.
 
-Overview:
+Main features
 -------------
-Main features:
 * access public fields and properties from model
 * no special setup required for models - any object can be used
 * access model fields only when requested by template (pull).
@@ -29,26 +28,31 @@ API usage & Hello world:
 	//result == "Hello, World!"
 
 If you want to help users to discover valid values that can be used on a template:
+
 	ICollection<String> = DiscoverValuePathsFromModel(model, maximumDepth:2);
 
 To apply formatting to model values:
+
 	[[MyDateTime:u]] applies a standard .net format string "u".
 	[[MyDateTime:dd.MM.yyyy]] applies a custom .net format string
 
 To access child objects or their members in a template:
+
 	[[ChildObject.GrandChildObject.FieldName]]
 
 To conditionally include or exclude a section in template based on a Boolean field in model:
+
 	[[ if (BeHonest) ]]
 		You're ugly..
 	[[ endif (BeHonest) ]]
 
 To process a template for each item in collection member model.Children:
+
 	[[ for (Children) ]]
 		Shown for every child. this one is [[Children.Name]].
 	[[ endfor (Children) ]]
 
-Extension points:
+Extension points
 ------------------
 it is possible to
 * change templating syntax, including
@@ -59,6 +63,6 @@ it is possible to
 
 Tips and Tricks
 ----------------
-* Use <b> and </b> in command markers to emphasize command statements in HTML template
+* Use &lt;b&gt; and &lt;/b&gt; in command markers to emphasize command statements in HTML template
 
 
