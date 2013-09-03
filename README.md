@@ -29,7 +29,7 @@ API usage & Hello world:
 
 If you want to help users to discover valid values that can be used on a template:
 
-	ICollection<String> = DiscoverValuePathsFromModel(model, maximumDepth:2);
+	ICollection<String> items = engine.DiscoverValuePathsFromModel(model, maximumDepth:2);
 
 To apply formatting to model values:
 
