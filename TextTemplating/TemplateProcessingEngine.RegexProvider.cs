@@ -21,6 +21,9 @@ using System.Text.RegularExpressions;
 
 namespace Nortal.Utilities.TextTemplating
 {
+	/// <summary>
+	/// Provides regular expressions to implement configuration described by SyntaxSettings.
+	/// </summary>
 	partial class TemplateProcessingEngine
 	{
 		private sealed class RegexProvider

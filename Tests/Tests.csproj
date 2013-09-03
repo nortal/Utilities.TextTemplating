@@ -52,6 +52,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ConditionalReplacementTests.cs" />
+    <Compile Include="SelfReferenceTests.cs" />
     <Compile Include="SyntaxChangeTests.cs" />
     <Compile Include="LoopReplacementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

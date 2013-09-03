@@ -16,8 +16,8 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		public void Initialize()
 		{
 			SyntaxSettings settings = new SyntaxSettings();
-			settings.BeginTag = "=|";
-			settings.EndTag = "|=";
+			settings.BeginTag = "<b>";
+			settings.EndTag = "</b>";
 			settings.ConditionalStartCommand = "kui";
 			settings.ConditionalElseCommand = "muidu";
 			settings.ConditionalEndCommand = "/kui";
@@ -39,13 +39,13 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				Items = "123".ToCharArray()
 			};
 			String template = TemplateContentPrefix
-				+ "=|kui(ABoolean)|="
+				+ "<b>kui(ABoolean)</b>"
 					+ ExpectedValue
-				+ "=|/kui(ABoolean)|="
-				+ "=|AField|="
-				+ "=|tsükkel(Items)|="
+				+ "<b>/kui(ABoolean)</b>"
+				+ "<b>AField</b>"
+				+ "<b>tsükkel(Items)</b>"
 				+ "X"
-				+ "=|/tsükkel(Items)|="
+				+ "<b>/tsükkel(Items)</b>"
 				+ TemplateContentSuffix;
 
 			String expectedResult = TemplateContentPrefix
@@ -57,6 +57,5 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			String actual = this.Engine.Process(template, model);
 			Assert.AreEqual(expectedResult, actual);
 		}
-
 	}
 }

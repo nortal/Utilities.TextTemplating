@@ -20,6 +20,9 @@ using System;
 
 namespace Nortal.Utilities.TextTemplating
 {
+	/// <summary>
+	/// Contains configuration describing how functional parts of template look like.
+	/// </summary>
 	public class SyntaxSettings
 	{
 		public SyntaxSettings()
@@ -38,6 +41,7 @@ namespace Nortal.Utilities.TextTemplating
 		public String LoopEndCommand { get; set; }
 
 		public String SubtemplateCommand { get; set; }
+		public String SelfReferenceKeyword { get; set; }
 
 		private void Reset()
 		{
@@ -52,6 +56,7 @@ namespace Nortal.Utilities.TextTemplating
 			LoopEndCommand = @"endfor";
 
 			SubtemplateCommand = @"template";
+			SelfReferenceKeyword = @"this";
 		}
 	}
 }

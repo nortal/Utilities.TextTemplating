@@ -98,7 +98,9 @@ namespace Nortal.Utilities.TextTemplating
 			String valuePath = CalculateSubmodelPath(fieldNameBlock.Value, pathToModel);
 			if (valuePath == null) { return match.Value; }
 
-			Object value = this.ValueExtractor.ExtractValue(model, valuePath);
+			Object value = valuePath == this.Patterns.Settings.SelfReferenceKeyword
+				? model
+				: this.ValueExtractor.ExtractValue(model, valuePath);
 			String format = formatBlock.Success ? formatBlock.Value : null;
 			String formattedValue = FormatValue(valuePath, value, format);
 			return formattedValue;
@@ -153,7 +155,9 @@ namespace Nortal.Utilities.TextTemplating
 			if (valuePath == null) { return match.Value; }
 
 			// find values from model
-			Object itemsValue = this.ValueExtractor.ExtractValue(model, valuePath);
+			Object itemsValue = valuePath == this.Patterns.Settings.SelfReferenceKeyword
+				? model
+				: this.ValueExtractor.ExtractValue(model, valuePath);
 			if (itemsValue == null) { return null; } //missing collection is equivalent to empty collection to avoid the need for "if collection exists" wrappers
 			var collection = itemsValue as IEnumerable;
 
@@ -205,7 +209,9 @@ namespace Nortal.Utilities.TextTemplating
 			String valuePath = CalculateSubmodelPath(condition.Value, pathToModel);
 			if (valuePath == null) { return match.Value; }
 
-			Object value = this.ValueExtractor.ExtractValue(model, valuePath);
+			Object value = valuePath == this.Patterns.Settings.SelfReferenceKeyword
+				? model
+				: this.ValueExtractor.ExtractValue(model, valuePath);
 			var booleanValue = value as Nullable<Boolean>;
 			if (booleanValue == null && value != null)
 			{
@@ -240,7 +246,9 @@ namespace Nortal.Utilities.TextTemplating
 			String valuePath = CalculateSubmodelPath(modelBlock.Value, pathToModel);
 			if (valuePath == null) { return match.Value; }
 
-			var subtemplateModel = this.ValueExtractor.ExtractValue(model, valuePath);
+			var subtemplateModel = valuePath == this.Patterns.Settings.SelfReferenceKeyword
+				? model
+				: this.ValueExtractor.ExtractValue(model, valuePath);
 
 			String subtemplate = ResolveSubtemplateByName(templateName.Value);
 			try
