@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -89,7 +90,8 @@ namespace Nortal.Utilities.TextTemplating
 			}
 			catch (Exception exception)
 			{
-				throw new InvalidOperationException(String.Format("Failed to extract value '{0}' from model {1}.", valuePath, model), exception);
+				String exceptionMessage = String.Format(CultureInfo.InvariantCulture, "Failed to extract value '{0}' from model {1}.", valuePath, model);
+				throw new InvalidOperationException(exceptionMessage, exception);
 			}
 		}
 
@@ -105,12 +107,12 @@ namespace Nortal.Utilities.TextTemplating
 			}
 			catch (Exception exception)
 			{
-				throw new Exception(String.Format(
-						"Failed to extract value '{0}' from submodel path '{1}', model: '{2}'.",
-						innerModelName,
-						String.Join(".", modelPath.ToArray()),
-						model),
-					exception);
+				String exceptionMessage = String.Format(CultureInfo.InvariantCulture, "Failed to extract value '{0}' from submodel path '{1}', model: '{2}'.",
+					innerModelName,
+					String.Join(".", modelPath.ToArray()),
+					model
+				);
+				throw new TemplateProcessingException(exceptionMessage, exception);
 			}
 
 			modelPath.Add(innerModelName);
@@ -125,7 +127,7 @@ namespace Nortal.Utilities.TextTemplating
 
 			Type modelType = model.GetType();
 			var members = modelType.GetMember(nextObjectName, MemberTypesToSearch, BindingFlagsForSearch);
-			if (members.Length == 0) { throw new Exception("No member was found in model with name '" + nextObjectName + "'."); }
+			if (members.Length == 0) { throw new TemplateProcessingException("No member was found in model with name '" + nextObjectName + "'."); }
 
 			return ExtractDirectValue(model, members.First());
 		}

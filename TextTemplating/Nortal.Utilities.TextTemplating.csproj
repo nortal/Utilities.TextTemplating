@@ -64,6 +64,7 @@
     <Compile Include="TemplateProcessingEngine.RegexProvider.cs" />
     <Compile Include="SyntaxSettings.cs" />
     <Compile Include="ReflectionBasedValueExtractor.cs" />
+    <Compile Include="TemplateProcessingException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -75,6 +76,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="_tools\Nortal.Utilities.AssemblyVersioning.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="Properties\SpellingDictionary.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

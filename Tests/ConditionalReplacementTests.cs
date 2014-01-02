@@ -125,7 +125,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(Exception))]
+		[ExpectedException(typeof(TemplateProcessingException))]
 		public void TestConditionalInvalidCondition()
 		{
 			var model = new { NotABoolean = "SomeString" };

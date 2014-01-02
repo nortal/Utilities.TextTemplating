@@ -106,7 +106,7 @@ namespace Nortal.Utilities.TextTemplating
 			return formattedValue;
 		}
 
-		private String CalculateSubmodelPath(String fullPath, String parentPath)
+		private static String CalculateSubmodelPath(String fullPath, String parentPath)
 		{
 			if (parentPath.Length == 0) { return fullPath; }
 			// if field does not belong to this submodel, keep it as is.
@@ -149,7 +149,7 @@ namespace Nortal.Utilities.TextTemplating
 			var contentBlock = match.Groups[RegexProvider.GroupNames.LoopContent];
 
 			if (!fieldNameBlock.Success) { throw new InvalidOperationException("FieldName not found"); }
-			if (!contentBlock.Success) { throw new InvalidOperationException("ContentBlock not found for loop " + fieldNameBlock.Value); }
+			if (!contentBlock.Success) { throw new InvalidOperationException("Content block not found for loop " + fieldNameBlock.Value); }
 
 			String valuePath = CalculateSubmodelPath(fieldNameBlock.Value, pathToModel);
 			if (valuePath == null) { return match.Value; }
@@ -215,7 +215,12 @@ namespace Nortal.Utilities.TextTemplating
 			var booleanValue = value as Nullable<Boolean>;
 			if (booleanValue == null && value != null)
 			{
-				throw new Exception(String.Format(@"Template conditional '{0}' is not a valid boolean value. Invalid value is '{1}' of type {2}.", condition.Value, value, value.GetType()));
+				String exceptionMessage = String.Format(CultureInfo.InvariantCulture, @"Template conditional '{0}' is not a valid boolean value. Invalid value is '{1}' of type {2}.",
+					condition.Value,
+					value,
+					value.GetType()
+				);
+				throw new TemplateProcessingException(exceptionMessage);
 			}
 
 			var returnBlock = booleanValue == true //ReflectionValueExtractor.IsValueTrue(value, condition.Value)
@@ -258,7 +263,7 @@ namespace Nortal.Utilities.TextTemplating
 			}
 			catch (Exception exception)
 			{
-				throw new InvalidOperationException("Failed processing subtemplate " + subtemplate + ", for model " + subtemplateModel, exception);
+				throw new InvalidOperationException("Failed processing sub template " + subtemplate + ", for model " + subtemplateModel, exception);
 			}
 		}
 
