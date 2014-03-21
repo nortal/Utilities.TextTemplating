@@ -23,8 +23,8 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			{
 				ADate = new DateTime(2011, 04, 28)
 			};
-			String template = "[[ADate]]";
-			String expectedResult = "28.04.2011";
+			const String template = "[[ADate]]";
+			const String expectedResult = "28.04.2011";
 
 			String actual = this.Engine.Process(template, model);
 			Assert.AreEqual(expectedResult, actual);
@@ -37,8 +37,8 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			{
 				ADate = new DateTime(2011, 04, 28, 17, 58, 41)
 			};
-			String template = "[[ADate]]";
-			String expectedResult = "28.04.2011 17:58";
+			const String template = "[[ADate]]";
+			const String expectedResult = "28.04.2011 17:58";
 
 			String actual = this.Engine.Process(template, model);
 			Assert.AreEqual(expectedResult, actual);
@@ -51,8 +51,8 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			{
 				ADate = new DateTime(2011, 04, 28, 17, 58, 41)
 			};
-			String template = "[[ADate:u]]";
-			String expectedResult = "2011-04-28 17:58:41Z";
+			const String template = "[[ADate:u]]";
+			const String expectedResult = "2011-04-28 17:58:41Z";
 
 			String actual = this.Engine.Process(template, model);
 			Assert.AreEqual(expectedResult, actual);
@@ -65,8 +65,8 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			{
 				ADate = new DateTime(2011, 04, 28, 17, 58, 41)
 			};
-			String template = @"[[ADate:""kala""dd]]";
-			String expectedResult = "kala28";
+			const String template = @"[[ADate:""kala""dd]]";
+			const String expectedResult = "kala28";
 
 			String actual = this.Engine.Process(template, model);
 			Assert.AreEqual(expectedResult, actual);

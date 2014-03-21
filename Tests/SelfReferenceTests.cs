@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nortal.Utilities.TextTemplating;
 
-namespace Nortal.Utilities.TemplatingEngine.Tests
+namespace Nortal.Utilities.TextTemplating.Tests
 {
 	[TestClass]
 	public class SelfReferenceTests
@@ -33,8 +32,8 @@ namespace Nortal.Utilities.TemplatingEngine.Tests
 				Name = "Parent",
 			};
 
-			String template = "[[this]]";
-			String expected = "TestModelSelf";
+			const String template = "[[this]]";
+			const String expected = "TestModelSelf";
 
 			String actual = new TestEngine().Process(template, model);
 			Assert.AreEqual(expected, actual);
@@ -50,12 +49,12 @@ namespace Nortal.Utilities.TemplatingEngine.Tests
 				new TestModel { Name = "2" },
 			};
 
-			String template = @""
+			const String template = @""
 				+ "[[ for(this) ]]"
 				+ "[[this.Name]]"
 				+ "[[ endfor(this) ]]";
 
-			String expected = "12";
+			const String expected = "12";
 
 			String actual = new TestEngine().Process(template, model);
 			Assert.AreEqual(expected, actual);
@@ -66,11 +65,11 @@ namespace Nortal.Utilities.TemplatingEngine.Tests
 		{
 			var model = new TestModel{Name = "Test"};
 
-			String template = @""
+			const String template = @""
 				+ "Model: [[Name]]"
 				+ "Subtemplate [[template(SUB, this)]]";
 
-			String expected = @""
+			const String expected = @""
 				+ "Model: Test"
 				+ "Subtemplate SUB: Test";
 

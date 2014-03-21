@@ -5,5 +5,5 @@ using System.Reflection;
 
 // Generated based on assembly version: 0.9.0
 [assembly: AssemblyInformationalVersion("0.9.0")] // algorithm: NugetSemanticVersionGenerator
-[assembly: AssemblyFileVersion("0.9.40102.1043")] // algorithm: HumanReadable2SlotTimestampGenerator
-[assembly: AssemblyConfiguration("Release (on UTC2014-01-02T10:43:06 by imrep at DELL472)")] // algorithm: HumanReadableBuildInfoGenerator
+[assembly: AssemblyFileVersion("0.9.40321.1031")] // algorithm: HumanReadable2SlotTimestampGenerator
+[assembly: AssemblyConfiguration("Release (on UTC2014-03-21T10:31:23 by imrep at DELL688)")] // algorithm: HumanReadableBuildInfoGenerator

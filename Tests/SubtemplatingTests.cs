@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nortal.Utilities.TextTemplating;
 
-namespace Nortal.Utilities.TemplatingEngine.Tests
+namespace Nortal.Utilities.TextTemplating.Tests
 {
 	[TestClass]
 	public class SubtemplatingTests
@@ -26,12 +25,12 @@ namespace Nortal.Utilities.TemplatingEngine.Tests
 				AnotherChild = new { Name = "Aadu" }
 			};
 
-			String template = @""
+			const String template = @""
 				+ "[[Name]]"
 				+ "[[template(MY, Child)]]"
 				+ "[[template(ANOTHER, AnotherChild)]]";
 
-			String expected = @""
+			const String expected = @""
 				+ "Parent"
 				+ "Subtemplate MY: Uudu"
 				+ "Subtemplate ANOTHER: Aadu";

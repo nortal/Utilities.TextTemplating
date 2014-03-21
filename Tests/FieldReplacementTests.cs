@@ -22,16 +22,19 @@ namespace Nortal.Utilities.TextTemplating.Tests
 
 		private class MemberAccessTestModel
 		{
+#pragma warning disable 169
+			// ReSharper disable once ConvertToConstant.Local
 			public String Field = "Field";
 			public String Property { get { return "Property"; } }
 			internal String NotPublic = "NotPublic";
+#pragma warning restore 169
 		}
 
 		[TestMethod]
 		public void TestFieldsCanAccessFieldsAndProperties()
 		{
 			var model = new MemberAccessTestModel();
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[Field]]"
 				+ "[[Property]]"
 				+ TemplateContentSuffix;
@@ -50,10 +53,11 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		public void TestFieldsCannotAccessNonPublicMembers()
 		{
 			var model = new MemberAccessTestModel();
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[NotPublic]]"
 				+ TemplateContentSuffix;
 
+			// ReSharper disable once UnusedVariable
 			String actual = this.Engine.Process(template, model);
 		}
 
@@ -103,7 +107,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				}
 			};
 
-			String template = "[[Child.SecondChild.Value]]";
+			const String template = "[[Child.SecondChild.Value]]";
 
 			String actual = this.Engine.Process(template, model);
 			Assert.AreEqual(ExpectedToken, actual);
@@ -117,11 +121,11 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			{
 				Child = (Object)null
 			};
-			String template = TemplateContentPrefix
-				+ "[[Child.NotParsed.NotparsedAsWell.Value]]"
-				+ TemplateContentSuffix;
+			const String template = TemplateContentPrefix
+									+ "[[Child.NotParsed.NotparsedAsWell.Value]]"
+									+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ TemplateContentSuffix;
 
 			String actual = this.Engine.Process(template, model);
@@ -132,11 +136,11 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		public void TestFieldReplacementIgnoresCommands()
 		{
 			var model = new { Value = "WRONG." };
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[somecommand(Value)]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = template;
+			const String expectedResult = template;
 
 			String actual = this.Engine.Process(template, model);
 			Assert.AreEqual(expectedResult, actual);
@@ -146,11 +150,11 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		public void TestFieldsIgnoreWhitespace()
 		{
 			var model = new { Value = ExpectedToken };
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[ \t \n\r    Value  \t \n\r    ]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 

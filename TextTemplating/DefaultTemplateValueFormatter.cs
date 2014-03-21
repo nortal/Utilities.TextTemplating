@@ -53,7 +53,7 @@ namespace Nortal.Utilities.TextTemplating
 			if (type.IsGenericType && type == typeof(Nullable<Boolean>)) { type = type.GetGenericArguments().First(); }
 			if (type == typeof(DateTime))
 			{
-				DateTime dateValue = (DateTime)value;
+				var dateValue = (DateTime)value;
 				if (dateValue == dateValue.Date) { return "d"; } //short pattern, 6/15/2009 (en-US)
 				return "g"; //short date time pattern: 6/15/2009 1:45PM (en-US)
 			}

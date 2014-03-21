@@ -24,12 +24,12 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		public void TestConditionalIfTrue()
 		{
 			var model = new { ValueTrue = true };
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[if(ValueTrue)]]" + ExpectedToken
 				+ "[[endif(ValueTrue)]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
@@ -41,12 +41,12 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		public void TestConditionalIfFalse()
 		{
 			var model = new { ValueFalse = false };
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[if(ValueFalse)]]" + WrongToken
 				+ "[[endif(ValueFalse)]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ TemplateContentSuffix;
 
 			String actual = this.Engine.Process(template, model);
@@ -57,12 +57,12 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		public void TestConditionalIfTrueNullable()
 		{
 			var model = new { ValueTrue = (Boolean?)true };
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[if(ValueTrue)]]" + ExpectedToken
 				+ "[[endif(ValueTrue)]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
@@ -74,13 +74,13 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		public void TestConditionalIfElseTrue()
 		{
 			var model = new { ValueTrue = true };
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[if(ValueTrue)]]" + ExpectedToken
 				+ "[[else(ValueTrue)]]" + WrongToken
 				+ "[[endif(ValueTrue)]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
@@ -92,13 +92,13 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		public void TestConditionalIfElseFalse()
 		{
 			var model = new { ValueFalse = false };
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[if(ValueFalse)]]" + WrongToken
 				+ "[[else(ValueFalse)]]" + ExpectedToken
 				+ "[[endif(ValueFalse)]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
@@ -110,13 +110,13 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		public void TestConditionalNull()
 		{
 			var model = new { Value = (Boolean?)null };
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[if(Value)]]" + WrongToken
 				+ "[[else(Value)]]" + ExpectedToken
 				+ "[[endif(Value)]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
@@ -129,12 +129,13 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		public void TestConditionalInvalidCondition()
 		{
 			var model = new { NotABoolean = "SomeString" };
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[if(NotABoolean)]]" + WrongToken
 				+ "[[else(NotABoolean)]]" + WrongToken
 				+ "[[endif(NotABoolean)]]"
 				+ TemplateContentSuffix;
 
+			// ReSharper disable once UnusedVariable
 			String actual = this.Engine.Process(template, model);
 		}
 
@@ -165,7 +166,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				ValueTrue = true,
 				ValueFalse = false
 			};
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[if(ValueTrue)]]" + ExpectedToken + "1"
 					+ "[[if(ValueFalse)]]" + WrongToken
 					+ "[[else(ValueFalse)]]" + ExpectedToken + "2"
@@ -173,7 +174,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ "[[endif(ValueTrue)]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ ExpectedToken + "1"
 				+ ExpectedToken + "2"
 				+ TemplateContentSuffix;
@@ -190,7 +191,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				ABoolean = true,
 				Value = ExpectedToken
 			};
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[if(ABoolean)]]"
 					+ "[[Value]]"
 				+ "[[endif(ABoolean)]]"

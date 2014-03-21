@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nortal.Utilities.TextTemplating;
 
-namespace Nortal.Utilities.TemplatingEngine.Tests
+namespace Nortal.Utilities.TextTemplating.Tests
 {
 	[TestClass]
 	public class ReflectionBasedValueExtractorTests
 	{
+#pragma warning disable 169
 		private class Model
 		{
 			public class SimpleChildClass
@@ -16,12 +16,15 @@ namespace Nortal.Utilities.TemplatingEngine.Tests
 				public String Name = "";
 			}
 
-			private Boolean PrivateField = true;
+
+			private Boolean privateField = true;
 			public String PublicField = "";
+			// ReSharper disable once UnusedMember.Local
 			public String PublicProperty { get; set; }
 
 			public List<SimpleChildClass> ChildList = null;
 		}
+#pragma warning restore 169
 
 		[TestMethod]
 		public void TestListingValidFieldsDepth1()

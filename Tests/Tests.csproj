@@ -6,8 +6,8 @@
     <ProjectGuid>{A0F96764-BA85-47BC-9E06-C82712187AB5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nortal.Utilities.TemplatingEngine.Tests</RootNamespace>
-    <AssemblyName>Nortal.Utilities.TemplatingEngine.Tests</AssemblyName>
+    <RootNamespace>Nortal.Utilities.TextTemplating.Tests</RootNamespace>
+    <AssemblyName>Nortal.Utilities.TextTemplating.Tests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -34,6 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>414</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

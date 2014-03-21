@@ -39,7 +39,7 @@ namespace Nortal.Utilities.TextTemplating
 
 			private void InitializePatterns()
 			{
-				RegexOptions options = RegexOptions.ExplicitCapture | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline;
+				const RegexOptions options = RegexOptions.ExplicitCapture | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline;
 
 				this.RegexForConditional = new Regex(this.BuildRegexPatternForIf(), options);
 				this.RegexForLoop = new Regex(this.BuildRegexPatternForLoop(), options);
@@ -72,7 +72,7 @@ namespace Nortal.Utilities.TextTemplating
 			private String SyntaxStart { get { return Environment.NewLine + Regex.Escape(this.Settings.BeginTag) + OptionalWhitespace; } }
 			private String SyntaxEnd { get { return OptionalWhitespace + Regex.Escape(this.Settings.EndTag) + Environment.NewLine; } }
 
-			private String CommandStart(String command = null)
+			private String CommandStart(String command)
 			{
 				return SyntaxStart
 					+ Regex.Escape(command)

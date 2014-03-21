@@ -161,11 +161,9 @@ namespace Nortal.Utilities.TextTemplating
 			if (itemsValue == null) { return null; } //missing collection is equivalent to empty collection to avoid the need for "if collection exists" wrappers
 			var collection = itemsValue as IEnumerable;
 
-			int count = 0;
 			var collectedSubTemplates = new StringBuilder(100);
 			foreach (var item in collection)
 			{
-				count++;
 				String itemPath = String.IsNullOrEmpty(pathToModel)
 					? valuePath
 					: pathToModel + "." + valuePath;

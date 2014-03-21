@@ -9,7 +9,6 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		private const String TemplateContentPrefix = @"Some document prefix";
 		private const String TemplateContentSuffix = @"Some suffix";
 
-		private static readonly String TemplateCommandSeparator = Environment.NewLine;
 		private const String ExpectedValue = @"EXPECTED";
 
 		[TestInitialize]
@@ -38,7 +37,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				AField = ExpectedValue,
 				Items = "123".ToCharArray()
 			};
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "<b>kui(ABoolean)</b>"
 					+ ExpectedValue
 				+ "<b>/kui(ABoolean)</b>"

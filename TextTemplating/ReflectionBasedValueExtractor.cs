@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -33,10 +32,10 @@ namespace Nortal.Utilities.TextTemplating
 		public IEnumerable<String> DiscoverValidValuePaths(Object exampleModel, int maximumDepth)
 		{
 			if (exampleModel == null) { throw new ArgumentNullException("exampleModel"); }
-			if (maximumDepth < 1) { throw new ArgumentException("Depth must be positive integer.", "depth"); }
+			if (maximumDepth < 1) { throw new ArgumentException("Depth must be positive integer.", "maximumDepth"); }
 
 			var returnItems = DiscoverValidValuePaths(exampleModel.GetType(), maximumDepth);
-			foreach (var item in returnItems) { yield return item; }
+			return returnItems;
 		}
 
 		private static IEnumerable<String> DiscoverValidValuePaths(Type type, int depth)
@@ -100,7 +99,7 @@ namespace Nortal.Utilities.TextTemplating
 			if (toParse.Count == 0) { return model; }
 			String innerModelName = toParse.First();
 
-			Object innerModel = null;
+			Object innerModel;
 			try
 			{
 				innerModel = ExtractDirectValue(model, innerModelName);
@@ -141,7 +140,7 @@ namespace Nortal.Utilities.TextTemplating
 				return property.GetValue(model, null);
 			}
 
-			var field = member as FieldInfo;
+			var field = (FieldInfo)member;
 			return field.GetValue(model);
 		}
 
@@ -153,8 +152,7 @@ namespace Nortal.Utilities.TextTemplating
 				return property.PropertyType;
 			}
 
-			var field = member as FieldInfo;
-			Debug.Assert(field != null);
+			var field = (FieldInfo)member;			
 			return field.FieldType;
 		}
 	}

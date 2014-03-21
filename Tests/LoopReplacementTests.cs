@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace Nortal.Utilities.TextTemplating.Tests
 {
@@ -9,8 +9,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		private const String TemplateContentPrefix = @"prefix ";
 		private const String TemplateContentSuffix = @"suffix ";
 
-		private static readonly String TemplateCommandSeparator = Environment.NewLine;
-		private static readonly String ExpectedValue = "EXPECTED";
+		private const String ExpectedValue = "EXPECTED";
 
 		[TestInitialize]
 		public void Initialize()
@@ -23,8 +22,11 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		private class LoopTestModel
 		{
 			public LoopTestModel(String name) { this.Name = name; }
+			// ReSharper disable NotAccessedField.Local
 			public String Name;
 			public Object Children; // to attach Children of various types if needed.
+			// ReSharper restore NotAccessedField.Local
+
 		}
 
 		[TestMethod]
@@ -33,13 +35,13 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			var model = new LoopTestModel("root");
 			model.Children = "123".ToCharArray();
 
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[ for(Children) ]]"
 				+ ExpectedValue
 				+ "[[ endfor(Children) ]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ ExpectedValue
 				+ ExpectedValue
 				+ ExpectedValue
@@ -55,7 +57,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			var model = new LoopTestModel("root");
 			model.Children = "123".ToCharArray();
 
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[ Name ]] "
 				+ "[[ Children.Length]] "
 				+ "[[ for(Children) ]]"
@@ -63,7 +65,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ "[[ endfor(Children) ]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ "root 3 Child1 Child2 Child3 "
 				+ TemplateContentSuffix;
 
@@ -96,7 +98,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 					}
 				}
 			};
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[ for(Children) ]]"
 				+ "[[	for(Children.Children) ]]"
 				+ "[[		Children.Children.Name ]]"
@@ -104,7 +106,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ "[[ endfor(Children) ]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ "Child11"
 				+ "Child12"
 				+ "Child13"
@@ -141,7 +143,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 					}
 				}
 			};
-			String template = TemplateContentPrefix
+			const String template = TemplateContentPrefix
 				+ "[[for(Children) ]]"
 				+ "[[	for(Children.Children) ]]"
 				+ "[[		Name]] -> [[Children.Name]] -> [[Children.Children.Name]]"
@@ -149,7 +151,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ "[[endfor(Children) ]]"
 				+ TemplateContentSuffix;
 
-			String expectedResult = TemplateContentPrefix
+			const String expectedResult = TemplateContentPrefix
 				+ "root -> Child1 -> Child11"
 				+ "root -> Child1 -> Child12"
 				+ "root -> Child1 -> Child13"
