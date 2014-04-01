@@ -43,6 +43,10 @@ namespace Nortal.Utilities.TextTemplating
 		public String SubtemplateCommand { get; set; }
 		public String SelfReferenceKeyword { get; set; }
 
+		public String ExistsStartCommand { get; set; }
+		public String ExistsElseCommand { get; set; }
+		public String ExistsEndCommand { get; set; }
+
 		private void Reset()
 		{
 			BeginTag = @"[[";
@@ -57,6 +61,10 @@ namespace Nortal.Utilities.TextTemplating
 
 			SubtemplateCommand = @"template";
 			SelfReferenceKeyword = @"this";
+
+			ExistsStartCommand = @"ifexists";
+			ExistsElseCommand = @"elseexists";
+			ExistsEndCommand = @"endifexists";
 		}
 	}
 }

@@ -204,5 +204,57 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			String actual = this.Engine.Process(template, model);
 			Assert.AreEqual(expectedResult, actual);
 		}
+
+		[TestMethod]
+		public void TestExistsConditionalIfTrue()
+		{
+			var model = new { Value = "this value is not null" };
+			const String template = TemplateContentPrefix
+				+ "[[ifexists(Value)]]" + ExpectedToken
+				+ "[[endifexists(Value)]]"
+				+ TemplateContentSuffix;
+
+			const String expectedResult = TemplateContentPrefix
+				+ ExpectedToken
+				+ TemplateContentSuffix;
+
+			String actual = this.Engine.Process(template, model);
+			Assert.AreEqual(expectedResult, actual);
+		}
+
+		[TestMethod]
+		public void TestExistsConditionalIfFalse()
+		{
+			var model = new { Value = (String)null };
+			const String template = TemplateContentPrefix
+				+ "[[ifexists(Value)]]" + ExpectedToken
+				+ "[[endifexists(Value)]]"
+				+ TemplateContentSuffix;
+
+			const String expectedResult = TemplateContentPrefix
+				// nothing is added
+				+ TemplateContentSuffix;
+
+			String actual = this.Engine.Process(template, model);
+			Assert.AreEqual(expectedResult, actual);
+		}
+
+		[TestMethod]
+		public void TestExistsConditionalIfElseFalse()
+		{
+			var model = new { Value = (String)null };
+			const String template = TemplateContentPrefix
+				+ "[[ifexists(Value)]]" + WrongToken
+				+ "[[elseexists(Value)]]" + ExpectedToken
+				+ "[[endifexists(Value)]]"
+				+ TemplateContentSuffix;
+
+			const String expectedResult = TemplateContentPrefix
+				+ ExpectedToken
+				+ TemplateContentSuffix;
+
+			String actual = this.Engine.Process(template, model);
+			Assert.AreEqual(expectedResult, actual);
+		}
 	}
 }

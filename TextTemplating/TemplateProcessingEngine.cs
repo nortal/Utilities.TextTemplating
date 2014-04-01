@@ -189,6 +189,11 @@ namespace Nortal.Utilities.TextTemplating
 					hasChanges = true;
 					return ReplaceConditional(match, model, pathToModel);
 				});
+				template = this.Patterns.RegexForExistsConditional.Replace(template, match =>
+				{
+					hasChanges = true;
+					return ReplaceExistsConditional(match, model, pathToModel);
+				});
 			} while (hasChanges);
 			return template;
 		}
@@ -221,7 +226,33 @@ namespace Nortal.Utilities.TextTemplating
 				throw new TemplateProcessingException(exceptionMessage);
 			}
 
-			var returnBlock = booleanValue == true //ReflectionValueExtractor.IsValueTrue(value, condition.Value)
+			var returnBlock = booleanValue == true
+				? yesBlock
+				: noblock;
+
+			if (returnBlock.Success) { return returnBlock.Value; }
+			return null;
+		}
+
+		private String ReplaceExistsConditional(Match match, Object model, String pathToModel)
+		{
+			if (!match.Success) { throw new InvalidOperationException("Unexpected match state."); }
+
+			// find condition from match
+			var condition = match.Groups[RegexProvider.GroupNames.Condition];
+			var yesBlock = match.Groups[RegexProvider.GroupNames.ConditionYesBlock];
+			var noblock = match.Groups[RegexProvider.GroupNames.ConditionNoBlock];
+
+			if (!condition.Success) { throw new InvalidOperationException("Invalid conditional value: " + condition.Value); }
+
+			String valuePath = CalculateSubmodelPath(condition.Value, pathToModel);
+			if (valuePath == null) { return match.Value; }
+
+			Object value = valuePath == this.Patterns.Settings.SelfReferenceKeyword
+				? model
+				: this.ValueExtractor.ExtractValue(model, valuePath);
+
+			var returnBlock = value != null
 				? yesBlock
 				: noblock;
 

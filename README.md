@@ -24,7 +24,8 @@ All commands are between special tags (by default '[[' and ']]') and will be pro
 API usage & Hello world:
 
 	var engine = new StringTemplatingEngine();
-	String result = engine.Process( @"Hello, [[Name]]!", new {Name = "World"}); 
+	var model = new {Name = "World"}
+	String result = engine.Process( @"Hello, [[Name]]!", model); 
 	//result == "Hello, World!"
 
 If you want to help users to discover valid values that can be used on a template:
@@ -43,8 +44,18 @@ To access child objects or their members in a template:
 To conditionally include or exclude a section in template based on a Boolean field in model:
 
 	[[ if (BeHonest) ]]
-		You're ugly..
+		You're ugly
+	[[ else (BeHonest) ]]
+		Oh, what beautiful 
 	[[ endif (BeHonest) ]]
+
+To conditionally include or exclude a section based on existence of a value:
+
+	[[ ifexists (Name) ]]
+		Your name is [[ Name ]].
+	[[ elseifexists (Name) ]]
+		I don't know who you are.
+	[[ endifexists (Name) ]]
 
 To process a template for each item in collection member model.Children:
 

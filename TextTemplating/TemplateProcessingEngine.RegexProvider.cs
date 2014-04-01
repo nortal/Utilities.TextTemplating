@@ -42,6 +42,7 @@ namespace Nortal.Utilities.TextTemplating
 				const RegexOptions options = RegexOptions.ExplicitCapture | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline;
 
 				this.RegexForConditional = new Regex(this.BuildRegexPatternForIf(), options);
+				this.RegexForExistsConditional = new Regex(this.BuildRegexPatternForIfSet(), options);
 				this.RegexForLoop = new Regex(this.BuildRegexPatternForLoop(), options);
 				this.RegexForFields = new Regex(this.BuildRegexPatternForFields(), options);
 				this.RegexForSubtemplate = new Regex(this.BuildRegexPatternForApplyTemplate(), options);
@@ -64,8 +65,9 @@ namespace Nortal.Utilities.TextTemplating
 			internal Regex RegexForLoop { get; private set; }
 			internal Regex RegexForFields { get; private set; }
 			internal Regex RegexForConditional { get; private set; }
+			internal Regex RegexForExistsConditional { get; private set; }
 			internal Regex RegexForSubtemplate { get; private set; }
-			
+
 			#region Build regex patterns
 			private const String OptionalWhitespace = @"\s*";
 
@@ -97,6 +99,18 @@ namespace Nortal.Utilities.TextTemplating
 					+ Environment.NewLine + CommandStart(settings.ConditionalEndCommand) + @" \k<condition> " + CommandEnd;
 			}
 
+			private String BuildRegexPatternForIfSet()
+			{
+				var settings = this.Settings;
+				return CommandStart(settings.ExistsStartCommand) + @" (?<condition>.+?) " + CommandEnd
+					+ Environment.NewLine + @"(?<YesBlock>.*?)"
+					+ Environment.NewLine + @"("
+					+ Environment.NewLine + "\t" + CommandStart(settings.ExistsElseCommand) + @" \k<condition> " + CommandEnd
+					+ Environment.NewLine + "\t" + @"(?<NoBlock>.*?)"
+					+ Environment.NewLine + @")?"
+					+ Environment.NewLine + CommandStart(settings.ExistsEndCommand) + @" \k<condition> " + CommandEnd;
+			}
+
 			private String BuildRegexPatternForLoop()
 			{
 				var settings = this.Settings;
@@ -110,10 +124,10 @@ namespace Nortal.Utilities.TextTemplating
 				return SyntaxStart + @" (?<name>[^\(\)]+?)" + OptionalWhitespace + @"(:(?<format> [^\(\)]+? ))? " + SyntaxEnd;
 			}
 
-			private String BuildRegexPatternForApplyTemplate() 
+			private String BuildRegexPatternForApplyTemplate()
 			{
 				return CommandStart(this.Settings.SubtemplateCommand) + @" (?<template>[^,]+?)" + OptionalWhitespace
-					+"," +OptionalWhitespace + "(?<model>.+?)" + CommandEnd;
+					+ "," + OptionalWhitespace + "(?<model>.+?)" + CommandEnd;
 			}
 			#endregion
 		}
