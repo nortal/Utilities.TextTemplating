@@ -252,9 +252,19 @@ namespace Nortal.Utilities.TextTemplating
 				? model
 				: this.ValueExtractor.ExtractValue(model, valuePath);
 
-			var returnBlock = value != null
+			var returnBlock = value != null 
 				? yesBlock
 				: noblock;
+
+			//consider empty collection also not existing values:
+			if (value != null)
+			{
+				var collection = value as ICollection;
+				if (collection != null && collection.Count == 0)
+				{
+					returnBlock = noblock;
+				}
+			}
 
 			if (returnBlock.Success) { return returnBlock.Value; }
 			return null;

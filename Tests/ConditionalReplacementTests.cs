@@ -1,5 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Nortal.Utilities.TextTemplating.Tests
 {
@@ -251,6 +253,55 @@ namespace Nortal.Utilities.TextTemplating.Tests
 
 			const String expectedResult = TemplateContentPrefix
 				+ ExpectedToken
+				+ TemplateContentSuffix;
+
+			String actual = this.Engine.Process(template, model);
+			Assert.AreEqual(expectedResult, actual);
+		}
+
+
+		[TestMethod]
+		public void TestExistsCollectionConditionalIfTrue()
+		{
+			var model = new List<DictionaryEntry>()
+			{
+				new DictionaryEntry() {Key = "Key1", Value = "Value1"},
+				new DictionaryEntry() {Key = "Key2", Value = "Value2"}
+			};
+			
+			const String template = TemplateContentPrefix
+				+ "[[ifexists(this)]]" 
+				+ "[[for(this)]]"
+				+ "[[this.Value]]"
+				+ "[[endfor(this)]]" 
+				+ "[[endifexists(this)]]"
+				+ TemplateContentSuffix;
+
+			const String expectedResult = TemplateContentPrefix
+				+ "Value1"
+				+ "Value2"
+				+ TemplateContentSuffix;
+
+			String actual = this.Engine.Process(template, model);
+			Assert.AreEqual(expectedResult, actual);
+		}
+
+		[TestMethod]
+		public void TestExistsCollectionConditionalIfEmpty()
+		{
+			List<DictionaryEntry> model = new List<DictionaryEntry>(0);
+
+			const String template = TemplateContentPrefix
+				+ "[[ifexists(this)]]"
+				+ "data:"
+				+ "[[for(this)]]"
+				+ "[[this.Value]]"
+				+ "[[endfor(this)]]"
+				+ "[[endifexists(this)]]"
+				+ TemplateContentSuffix;
+
+			const String expectedResult = TemplateContentPrefix
+				//no "data:"
 				+ TemplateContentSuffix;
 
 			String actual = this.Engine.Process(template, model);
