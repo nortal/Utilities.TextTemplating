@@ -1,0 +1,30 @@
+﻿<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>Nortal.Utilities.TextTemplating</id>
+		<version>0.10.2</version>
+		<title>Nortal.Utilities.TextTemplating</title>
+		<authors>Imre Pühvel</authors>
+		<owners>Imre Pühvel, AS Nortal</owners>
+		<iconUrl>http://www.nortal.com/_gfx/logo-32x32.png</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
+		<summary>Easy-to-use lightweight templating engine for generating text-based documents in code.</summary>
+		<description>
+			Easy-to-use lightweight templating engine for generating text-based documents by injecting values from .net object to a text-based template.
+			Supports conditional bocks, loops, subtemplates, etc. For documentation and examples see https://github.com/nortal/Utilities.TextTemplating.
+			Requires .Net Framework 3.5 client profile+.
+		</description>
+		<projectUrl>https://github.com/nortal/Utilities.TextTemplating</projectUrl>
+		<releaseNotes></releaseNotes>
+		<copyright>Copyright 2014-2015 Imre Pühvel, AS Nortal. Licenced under Apache License 2.0.</copyright>
+		<tags>Nortal text templating templates</tags>
+	</metadata>
+	<files>
+		<file src="Readme.txt" target=""/>
+		<file src="..\..\LICENSE.txt" target="content\LICENSE_Apache2.0.txt"/>
+		<file src="..\bin\$configuration$\Nortal.Utilities.TextTemplating.dll" target="lib\"/>
+		<file src="..\bin\$configuration$\Nortal.Utilities.TextTemplating.xml" target="lib\"/>
+		<file src="..\bin\$configuration$\Nortal.Utilities.TextTemplating.pdb" target="lib\"/>
+	</files>
+</package>

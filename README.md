@@ -10,7 +10,7 @@ Main features
 -------------
 * access public fields and properties from model
 * no special setup required for models - any object can be used
-* access model fields only when requested by template (pull).
+* model fields are accessed only when used by template (values are "pulled" from model).
 * can use child objects members in template at any depth
 * can conditionally show/hide a template block
 * can iterate a template block for every collection member
@@ -23,8 +23,8 @@ All commands are between special tags (by default '[[' and ']]') and will be pro
 
 API usage & Hello world:
 
-	var engine = new StringTemplatingEngine();
-	var model = new {Name = "World"}
+	var engine = new TemplateProcessingEngine();
+	var model = new { Name = "World" };
 	String result = engine.Process( @"Hello, [[Name]]!", model); 
 	//result == "Hello, World!"
 
@@ -43,11 +43,11 @@ To access child objects or their members in a template:
 
 To conditionally include or exclude a section in template based on a Boolean field in model:
 
-	[[ if (BeHonest) ]]
-		You're ugly
-	[[ else (BeHonest) ]]
-		Oh, what beautiful 
-	[[ endif (BeHonest) ]]
+	[[ if (IsPanicRequired) ]]
+		The end is nigh! Thou shall burn!
+	[[ else (IsPanicRequired) ]]
+		Oh, relax and enjoy the ride..
+	[[ endif (IsPanicRequired) ]]
 
 To conditionally include or exclude a section based on existence of a value:
 
@@ -75,5 +75,6 @@ it is possible to
 Tips and Tricks
 ----------------
 * Use &lt;b&gt; and &lt;/b&gt; in command markers to emphasize command statements in HTML template
+* You can find working examples of most features in source code, check the unit-testing project.
 
 

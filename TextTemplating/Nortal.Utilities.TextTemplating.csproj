@@ -71,6 +71,10 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Nortal.Utilities.TextTemplating.licenseheader" />
+    <None Include="_NugetPackaging\Nortal.Utilities.TextTemplating.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="_NugetPackaging\PackageRelease.bat" />
     <None Include="packages.config" />
     <None Include="Nortal.Utilities.TextTemplating.snk" />
     <None Include="_tools\Nortal.Utilities.AssemblyVersioning.props" />
@@ -81,6 +85,10 @@
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="Properties\SpellingDictionary.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="_NugetPackaging\output\.gitignore" />
+    <Content Include="_NugetPackaging\Readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

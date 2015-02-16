@@ -22,7 +22,12 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Nortal.Utilities.TextTemplating")]
 [assembly: AssemblyProduct("Nortal.Utilities.TextTemplating")]
-[assembly: AssemblyCopyright("Copyright © Nortal 2013")]
+
+[assembly: AssemblyCopyright("Copyright 2013-2015 Imre Pühvel, AS Nortal. Licenced under Apache License 2.0.")]
+[assembly: AssemblyDescription(
+@"Easy-to-use lightweight templating engine for generating text-based documents by injecting values from .net object to a text-based template.
+Supports conditional bocks, loops, subtemplates, etc. See project documentation in github for more details.
+Requires .Net Framework 3.5 client profile+.")]
 
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]
