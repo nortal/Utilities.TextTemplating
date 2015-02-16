@@ -17,17 +17,23 @@ Main features
 * can use subtemplates
 * templating syntax is customizable and localizable.
 
-Syntax and API
--------------------
+Getting started
+-----------------
+To install download built package from https://www.nuget.org/packages/Nortal.Utilities.TextTemplating or run the following command in the Package Manager Console:
+
+	PM> Install-Package Nortal.Utilities.TextTemplating
+
 All commands are between special tags (by default '[[' and ']]') and will be processed by engine - for example replaced by values from model.
 
-API usage & Hello world:
+"Hello world" example:
 
 	var engine = new TemplateProcessingEngine();
 	var model = new { Name = "World" };
 	String result = engine.Process( @"Hello, [[Name]]!", model); 
 	//result == "Hello, World!"
 
+Feature syntax and API
+-------------------
 If you want to help users to discover valid values that can be used on a template:
 
 	ICollection<String> items = engine.DiscoverValuePathsFromModel(model, maximumDepth:2);
