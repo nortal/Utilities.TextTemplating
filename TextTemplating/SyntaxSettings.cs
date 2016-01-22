@@ -17,6 +17,7 @@
 */
 
 using System;
+using System.Linq;
 
 namespace Nortal.Utilities.TextTemplating
 {
@@ -25,9 +26,11 @@ namespace Nortal.Utilities.TextTemplating
 	/// </summary>
 	public class SyntaxSettings
 	{
+		//TODO: consider working on interface to allow taking these from existing Settings file.
+
 		public SyntaxSettings()
 		{
-			Reset();
+			ResetToDefaults();
 		}
 
 		public String BeginTag { get; set; }
@@ -47,7 +50,10 @@ namespace Nortal.Utilities.TextTemplating
 		public String ExistsElseCommand { get; set; }
 		public String ExistsEndCommand { get; set; }
 
-		private void Reset()
+		/// <summary>
+		/// Resets settings to default english values.
+		/// </summary>
+		public void ResetToDefaults()
 		{
 			BeginTag = @"[[";
 			EndTag = @"]]";
@@ -65,6 +71,45 @@ namespace Nortal.Utilities.TextTemplating
 			ExistsStartCommand = @"ifexists";
 			ExistsElseCommand = @"elseexists";
 			ExistsEndCommand = @"endifexists";
+		}
+
+		/// <summary>
+		/// Performs various checks to make sure provided settings are valid for lexer/parser assumptions
+		/// </summary>
+		private void Validate()
+		{
+			const string exceptionPrefix = "Invalid syntax configuration: ";
+			String[] allCommands = new string[]{
+				ConditionalStartCommand,
+				ConditionalElseCommand,
+				ConditionalEndCommand,
+				LoopStartCommand,
+				LoopEndCommand,
+				ExistsStartCommand,
+				ExistsElseCommand,
+				ExistsEndCommand,
+				SubtemplateCommand,
+			};
+
+			// Make sure begin and end tags can be differentiated without looking for pair match.
+			if (BeginTag.StartsWith(EndTag) || EndTag.StartsWith(BeginTag))
+			{
+				throw new TemplateProcessingException(exceptionPrefix + "start and end tag are too similar: '{0}' vs '{1}'.", BeginTag, EndTag);
+			}
+
+			// Make sure command names do not contain command tags themselves - avoids longer lookaheads and need to track back.
+			var invalidCommandName = allCommands.FirstOrDefault(c => c.Contains(BeginTag) || c.Contains(EndTag));
+			if (invalidCommandName != null)
+			{
+				throw new TemplateProcessingException(exceptionPrefix + "command name '{0}' must not contain start or end tag.", invalidCommandName);
+			}
+
+			// Make sure commands are unique - obvious misconfiguration.
+			var duplicateCommandName = allCommands.GroupBy(item => item)
+				.Where(group => group.Count() >= 2)
+				.Select(group => group.Key)
+				.FirstOrDefault();
+			if (duplicateCommandName != null) { throw new TemplateProcessingException("multiple commands use name '{0}'.", duplicateCommandName); }
 		}
 	}
 }

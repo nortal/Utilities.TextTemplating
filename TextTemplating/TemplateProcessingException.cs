@@ -11,6 +11,7 @@ namespace Nortal.Utilities.TextTemplating
 	{
 		public TemplateProcessingException() { }
 		public TemplateProcessingException(string message) : base(message) { }
+		public TemplateProcessingException(string messageFormat, params String[] args) : base(String.Format(messageFormat, args)) { }
 		public TemplateProcessingException(string message, Exception inner) : base(message, inner) { }
 		protected TemplateProcessingException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 	}
