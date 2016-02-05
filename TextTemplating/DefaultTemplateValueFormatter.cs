@@ -22,6 +22,9 @@ using System.Linq;
 
 namespace Nortal.Utilities.TextTemplating
 {
+	/// <summary>
+	/// Controls how injected values are to be formatted for output document.
+	/// </summary>
 	public class DefaultTemplateValueFormatter : ITemplateValueFormatter
 	{
 		public DefaultTemplateValueFormatter() 

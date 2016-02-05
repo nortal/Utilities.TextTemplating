@@ -132,18 +132,16 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			Assert.AreEqual(expectedResult, actual);
 		}
 
+		//TODO: test no longer valid. now invalid command should throw. 
 		[TestMethod]
-		public void TestFieldReplacementIgnoresCommands()
+		[ExpectedException(typeof(TemplateProcessingException))]
+		public void TestInvalidCommandThrowsException()
 		{
-			var model = new { Value = "WRONG." };
 			const String template = TemplateContentPrefix
 				+ "[[somecommand(Value)]]"
 				+ TemplateContentSuffix;
 
-			const String expectedResult = template;
-
-			String actual = this.Engine.Process(template, model);
-			Assert.AreEqual(expectedResult, actual);
+			var parsed = this.Engine.ParseTemplate(template);
 		}
 
 		[TestMethod]
