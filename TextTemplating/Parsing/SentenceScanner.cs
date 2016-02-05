@@ -9,17 +9,15 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 	/// </summary>
 	public static class SentenceScanner
 	{
-		//Todo: switch to configurable settings
-		const String startTag = "[[";
-		const String endTag = "]]";
-
 		/// <summary>
 		/// Turns input into stream of sentences this template is built with.
 		/// Each sentence is either a block of content texts or a control commands to templating engine.
 		/// </summary>
 		/// <param name="template"></param>
+		/// <param name="startTag"></param>
+		/// <param name="endTag"></param>
 		/// <returns></returns>
-		internal static IEnumerable<TemplateSentence> Scan(string template)
+		internal static IEnumerable<TemplateSentence> Scan(string template, string startTag, string endTag)
 		{
 			int currentIndex = 0;
 			int commandStartIndex = int.MinValue; // not using nullables as indexof operates anyway on special value "-1" for missing index.

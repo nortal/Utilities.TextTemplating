@@ -36,21 +36,24 @@ namespace Nortal.Utilities.TextTemplating
 	{
 		public TemplateProcessingEngine()
 		{
-			//default implementations.
+			//default configuration:
 			this.ValueExtractor = new ReflectionBasedValueExtractor();
 			this.ValueFormatter = new DefaultTemplateValueFormatter();
+			this.Syntax = new SyntaxSettings();
 		}
 
-		public TemplateProcessingEngine(SyntaxSettings settings)
+		public TemplateProcessingEngine(SyntaxSettings syntax)
 			: this()
 		{
-			if (settings == null) { throw new ArgumentNullException("settings"); }
+			if (syntax == null) { throw new ArgumentNullException(nameof(syntax)); }
+			this.Syntax = syntax;
 		}
 
 		#region configuration
 		// configuration of extension points:
 		protected IModelValueExtractor ValueExtractor { get; set; }
 		protected ITemplateValueFormatter ValueFormatter { get; set; }
+		protected SyntaxSettings Syntax { get; set; }
 
 		public CultureInfo FormattingCulture
 		{
@@ -62,14 +65,14 @@ namespace Nortal.Utilities.TextTemplating
 		public ParsedTemplate ParseTemplate(String template)
 		{
 			if (template == null) { throw new ArgumentNullException("template"); }
-			return TemplateParser.Parse(template);
+			return TemplateParser.Parse(template, this.Syntax);
 		}
 
 		public String Process(String template, Object model)
 		{
 			if (model == null) { throw new ArgumentNullException("model"); }
 
-			var parsedTemplate = TemplateParser.Parse(template);
+			var parsedTemplate = ParseTemplate(template);
 			var document = Process(parsedTemplate, model);
 			return document;
 		}

@@ -8,10 +8,10 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 	public static class TemplateParser
 	{
 
-		public static ParsedTemplate Parse(String template)
+		public static ParsedTemplate Parse(String template, SyntaxSettings syntax)
 		{
-			var sentences = SentenceScanner.Scan(template).ToArray();
-			var commands = ParseSentencesToCommands(sentences).ToArray();
+			var sentences = SentenceScanner.Scan(template, syntax.BeginTag, syntax.EndTag);
+			var commands = ParseSentencesToCommands(sentences, syntax);
 			var commandTree = BuildSyntaxTree(commands);
 
 			return new ParsedTemplate(template, commandTree);
@@ -110,7 +110,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			//throw new NotImplementedException();
 		}
 
-		private static IEnumerable<Command> ParseSentencesToCommands(IEnumerable<TemplateSentence> sentences)
+		private static IEnumerable<Command> ParseSentencesToCommands(IEnumerable<TemplateSentence> sentences, SyntaxSettings syntax)
 		{
 			foreach (var sentence in sentences)
 			{
@@ -125,7 +125,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 				String[] arguments;
 				if (FunctionCallParser.TryParseCommand(sentence.OriginalText, out functionName, out arguments))
 				{
-					CommandType type = RecognizeFunctionName(functionName);
+					CommandType type = RecognizeFunctionName(functionName, syntax);
 					switch (type)
 					{
 						case CommandType.If:
@@ -168,18 +168,18 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			return arguments[argumentIndex];
 		}
 
-		private static CommandType RecognizeFunctionName(string functionName)
+		private static CommandType RecognizeFunctionName(string functionName, SyntaxSettings syntax)
 		{
 			//todo: take from SyntaxSettings.
-			if (functionName == "if") { return CommandType.If; }
-			if (functionName == "else") { return CommandType.IfElse; }
-			if (functionName == "endif") { return CommandType.IfEnd; }
-			if (functionName == "ifexists") { return CommandType.IfExists; }
-			if (functionName == "elseexists") { return CommandType.IfExistsElse; }
-			if (functionName == "endifexists") { return CommandType.IfExistsEnd; }
+			if (functionName == syntax.ConditionalStartCommand) { return CommandType.If; }
+			if (functionName == syntax.ConditionalElseCommand) { return CommandType.IfElse; }
+			if (functionName == syntax.ConditionalEndCommand) { return CommandType.IfEnd; }
+			if (functionName == syntax.ExistsStartCommand) { return CommandType.IfExists; }
+			if (functionName == syntax.ExistsElseCommand) { return CommandType.IfExistsElse; }
+			if (functionName == syntax.ExistsEndCommand) { return CommandType.IfExistsEnd; }
 
-			if (functionName == "for") { return CommandType.Loop; }
-			if (functionName == "endfor") { return CommandType.LoopEnd; }
+			if (functionName == syntax.LoopStartCommand) { return CommandType.Loop; }
+			if (functionName == syntax.LoopEndCommand) { return CommandType.LoopEnd; }
 			return CommandType.Unspecified;
 		}
 	}
