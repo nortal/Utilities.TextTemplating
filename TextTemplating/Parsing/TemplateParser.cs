@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Nortal.Utilities.TextTemplating.Parsing
 {
 	public static class TemplateParser
 	{
-
-		public static ParsedTemplate Parse(String template, SyntaxSettings syntax)
+		public static TextTemplate Parse(String template, SyntaxSettings syntax)
 		{
 			var sentences = SentenceScanner.Scan(template, syntax.BeginTag, syntax.EndTag);
 			var commands = ParseSentencesToCommands(sentences, syntax);
 			var commandTree = BuildSyntaxTree(commands);
 
-			return new ParsedTemplate(template, commandTree);
+			return new TextTemplate(template, commandTree);
 		}
 
 
@@ -170,7 +168,6 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 
 		private static CommandType RecognizeFunctionName(string functionName, SyntaxSettings syntax)
 		{
-			//todo: take from SyntaxSettings.
 			if (functionName == syntax.ConditionalStartCommand) { return CommandType.If; }
 			if (functionName == syntax.ConditionalElseCommand) { return CommandType.IfElse; }
 			if (functionName == syntax.ConditionalEndCommand) { return CommandType.IfEnd; }

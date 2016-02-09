@@ -21,6 +21,7 @@ using Nortal.Utilities.TextTemplating.Parsing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,7 @@ namespace Nortal.Utilities.TextTemplating
 	/// <summary>
 	/// Class to provide tools for filling text templates with data from model objects.
 	/// </summary>
+	//[Obsolete("To be removed in future version. Use TextTemplate class API instead.")] // to uncomment once new API is finished.
 	public partial class TemplateProcessingEngine
 	{
 		public TemplateProcessingEngine()
@@ -62,7 +64,7 @@ namespace Nortal.Utilities.TextTemplating
 		}
 		#endregion
 
-		public ParsedTemplate ParseTemplate(String template)
+		public TextTemplate ParseTemplate(String template)
 		{
 			if (template == null) { throw new ArgumentNullException("template"); }
 			return TemplateParser.Parse(template, this.Syntax);
@@ -77,12 +79,19 @@ namespace Nortal.Utilities.TextTemplating
 			return document;
 		}
 
-		public String Process(ParsedTemplate template, Object model)
+		public String Process(TextTemplate template, Object model)
 		{
 			if (model == null) { throw new ArgumentNullException("model"); }
 			if (template == null) { throw new ArgumentNullException("template"); }
 
-			String document = TemplateExecutionEngine.CreateDocument(template, model, this.ValueExtractor, this.ValueFormatter);
+			var configuration = new ExecutionConfiguration()
+			{
+				ValueExtractor = this.ValueExtractor,
+				ValueFormatter = this.ValueFormatter,
+				Subtemplates = null,
+			};
+
+			String document = TemplateExecutionEngine.CreateDocument(template, model, configuration);
 			return document;
 		}
 
