@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nortal.Utilities.TextTemplating.Parsing;
+using Nortal.Utilities.TextTemplating.Executing;
 
 namespace Nortal.Utilities.TextTemplating.Tests
 {
@@ -13,7 +15,6 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				return "Subtemplate " + templateName + ": [[Name]]";
 			}
 		}
-
 
 		[TestMethod]
 		public void TestSubTemplate()
@@ -35,7 +36,11 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ "Subtemplate MY: Uudu"
 				+ "Subtemplate ANOTHER: Aadu";
 
-			String actual = new TestEngine().Process(template, model);
+			var parsed = TextTemplate.Parse(template);
+			parsed.AddSubtemplate("MY", "Subtemplate MY: [[Name]]");
+			parsed.AddSubtemplate("ANOTHER", "Subtemplate ANOTHER: [[Name]]");
+
+			String actual = TemplateExecutionEngine.CreateDocument(parsed, model);
 			Assert.AreEqual(expected, actual);
 		}
 	}

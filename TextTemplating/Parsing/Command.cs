@@ -18,24 +18,4 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			return this.Type + ": " + this.Source.OriginalText;
 		}
 	}
-
-
-	
-
-	class BindFromModelCommand : ModelPathCommand
-	{
-		public BindFromModelCommand() { }
-		public BindFromModelCommand(CommandType type, TemplateSentence source) : base(type, source) { }
-		internal String FormatString { get; set; }
-	}
-
-	class SubTemplateCommand : ModelPathCommand
-	{
-		public SubTemplateCommand()
-		{
-
-		}
-		public SubTemplateCommand(CommandType type, TemplateSentence source) : base(type, source) { }
-		internal String SubTemplateName;
-	}
 }

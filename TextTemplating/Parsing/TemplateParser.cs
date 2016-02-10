@@ -4,6 +4,9 @@ using System.Diagnostics;
 
 namespace Nortal.Utilities.TextTemplating.Parsing
 {
+	/// <summary>
+	/// Contains and orchestrates logic for parsing a template text to its syntax tree form.
+	/// </summary>
 	public static class TemplateParser
 	{
 		public static TextTemplate Parse(String template, SyntaxSettings syntax)
@@ -15,8 +18,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			return new TextTemplate(template, commandTree);
 		}
 
-
-		public static SyntaxTreeNode BuildSyntaxTree(IEnumerable<Command> commands)
+		private static SyntaxTreeNode BuildSyntaxTree(IEnumerable<Command> commands)
 		{
 			var scopeCollector = new ScopedCommandCollector();
 
@@ -26,6 +28,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 				{
 					case CommandType.Copy:
 					case CommandType.BindFromModel:
+					case CommandType.SubTemplate:
 						// simple commans go straight to parent collection, no starting-closing scope.
 						scopeCollector.AddToScope(command);
 						continue;
@@ -43,7 +46,6 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 					case CommandType.IfEnd:
 					case CommandType.IfExistsEnd:
 						ValidateExplicitEndCommand(scopeCollector.ActiveCommand, command);
-
 						var conditionalNode = new SyntaxTreeNode();
 
 						if (scopeCollector.ActiveCommand.Type == CommandType.IfElse || scopeCollector.ActiveCommand.Type == CommandType.IfExistsElse)
@@ -53,7 +55,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 							scopeCollector.RestoreParentScope();
 						}
 
-						//pick up the true-branch:
+						//pick up the true-branch and continue parsing parent scope:
 						conditionalNode.Command = scopeCollector.ActiveCommand;
 						conditionalNode.PrimaryScope = scopeCollector.ActiveScope;
 						scopeCollector.RestoreParentScope();
@@ -67,26 +69,26 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 						scopeCollector.RestoreParentScope();
 						scopeCollector.AddToScope(loopNode);
 						break;
-					case CommandType.SubTemplate:
-						throw new NotImplementedException();
 					case CommandType.End:
 						var type = scopeCollector.ActiveCommand.Type;
 						if (type == CommandType.If || type == CommandType.IfElse
-							|| type == CommandType.IfExists || type == CommandType.IfExists)
+							|| type == CommandType.IfExists || type == CommandType.IfExistsElse)
 						{
 							throw new NotImplementedException(); //reuse logic  for ifEnd
 						}
-
 						throw new NotImplementedException(); // reuse logic for loopEnd
 					default:
 						throw new NotImplementedException("Command behavior is not specified for " + command.Type);
 				}
 			}
 
+			// verify no scope is left unclosed:
 			if (scopeCollector.ActiveCommand != null)
 			{
 				throw new Exception("Started command was not properly closed with and ending tag. Command: " + scopeCollector.ActiveCommand);
 			}
+
+			// bring scope items under a single tree root:
 			var root = new SyntaxTreeNode();
 			root.PrimaryScope = scopeCollector.ActiveScope;
 			return root;
@@ -139,8 +141,8 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 							yield return modelPathCommand;
 							continue;
 						case CommandType.SubTemplate:
-							var command = new SubTemplateCommand(type, sentence);
-							command.SubTemplateName = RequireArgument(type, arguments, 0);
+							var command = new SubtemplateCommand(type, sentence);
+							command.SubtemplateName = RequireArgument(type, arguments, 0);
 							command.ModelPath = RequireArgument(type, arguments, 1);
 							yield return command;
 							continue;
@@ -150,7 +152,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 							throw new NotImplementedException("Unhandled command found with type: " + type);
 					}
 				}
-				else
+				else // if it is not in function format, assume it is for querying the model:
 				{
 					var modelBindCommand = new ModelPathCommand(CommandType.BindFromModel, sentence);
 					modelBindCommand.ModelPath = sentence.OriginalText.Trim();
@@ -177,6 +179,8 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 
 			if (functionName == syntax.LoopStartCommand) { return CommandType.Loop; }
 			if (functionName == syntax.LoopEndCommand) { return CommandType.LoopEnd; }
+
+			if (functionName == syntax.SubtemplateCommand) { return CommandType.SubTemplate; }
 			return CommandType.Unspecified;
 		}
 	}

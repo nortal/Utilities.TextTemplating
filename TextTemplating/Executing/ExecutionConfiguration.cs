@@ -1,13 +1,11 @@
-﻿using Nortal.Utilities.TextTemplating.Parsing;
-using System;
-using System.Collections.Generic;
-
-namespace Nortal.Utilities.TextTemplating.Executing
+﻿namespace Nortal.Utilities.TextTemplating.Executing
 {
+	/// <summary>
+	/// Contains extension points to affect document building process.
+	/// </summary>
 	public class ExecutionConfiguration
 	{
-		public IDictionary<String, TextTemplate> Subtemplates { get; set; }
-		public IModelValueExtractor ValueExtractor { get; set; }
-		public ITemplateValueFormatter ValueFormatter { get; set; }
+		public IModelValueExtractor ValueExtractor { get; set; } = new ReflectionBasedValueExtractor();
+		public ITemplateValueFormatter ValueFormatter { get; set; } = new DefaultTemplateValueFormatter();
 	}
 }

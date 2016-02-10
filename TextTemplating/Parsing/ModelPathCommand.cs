@@ -5,7 +5,10 @@ using System.Text;
 
 namespace Nortal.Utilities.TextTemplating.Parsing
 {
-	class ModelPathCommand : Command
+	/// <summary>
+	/// 
+	/// </summary>
+	public class ModelPathCommand : Command
 	{
 		public ModelPathCommand() { }
 		public ModelPathCommand(CommandType type, TemplateSentence source) : base(type, source) { }

@@ -69,6 +69,7 @@
     <Compile Include="Parsing\ModelPathCommand.cs" />
     <Compile Include="Parsing\ScopedCommandCollector.cs" />
     <Compile Include="Parsing\SentenceScanner.cs" />
+    <Compile Include="Parsing\SubtemplateCommand.cs" />
     <Compile Include="Parsing\SyntaxTreeNode.cs" />
     <Compile Include="Parsing\TemplateParser.cs" />
     <Compile Include="Parsing\TemplateSentence.cs" />

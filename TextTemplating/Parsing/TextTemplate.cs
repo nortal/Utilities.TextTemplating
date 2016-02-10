@@ -17,8 +17,9 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			this.TemplateText = originalTemplate;
 		}
 
-		public static TextTemplate Parse(String documentTemplate, SyntaxSettings settings)
+		public static TextTemplate Parse(String documentTemplate, SyntaxSettings settings = null)
 		{
+			if (settings == null) { settings = new SyntaxSettings(); }
 			return TemplateParser.Parse(documentTemplate, settings);
 		}
 

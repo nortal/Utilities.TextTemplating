@@ -88,7 +88,6 @@ namespace Nortal.Utilities.TextTemplating
 			{
 				ValueExtractor = this.ValueExtractor,
 				ValueFormatter = this.ValueFormatter,
-				Subtemplates = null,
 			};
 
 			String document = TemplateExecutionEngine.CreateDocument(template, model, configuration);
@@ -97,6 +96,7 @@ namespace Nortal.Utilities.TextTemplating
 
 		protected virtual string ResolveSubtemplateByName(string templateName)
 		{
+
 			//Todo: 
 			throw new NotImplementedException("Override method to add project-specific template resolving logic.");
 		}
