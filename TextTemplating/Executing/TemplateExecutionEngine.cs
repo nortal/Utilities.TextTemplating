@@ -14,17 +14,26 @@ namespace Nortal.Utilities.TextTemplating.Executing
 	public static class TemplateExecutionEngine
 	{
 
+		/// <summary>
+		/// Combines a template with model and generates an output text document.
+		/// </summary>
+		/// <param name="template"></param>
+		/// <param name="model"></param>
+		/// <param name="configuration"></param>
+		/// <returns>Text document based on given template</returns>
 		public static String CreateDocument(TextTemplate template, Object model, ExecutionConfiguration configuration = null)
 		{
 			if (template == null) { throw new ArgumentNullException(nameof(template)); }
-			// model null CAN be acceptable in some scenarios.s
+			// model null CAN be acceptable in some scenarios.
 			if (configuration == null) { configuration = new ExecutionConfiguration(); }
 
 			// set up initial state:
 			List<SyntaxTreeNode> startingNodes = SetStartingNodes(template.ParseTree);
 
 			StringBuilder document = new StringBuilder(); //TODO: test stream later, optimize for <1MB documents.
-			ProcessNodes(startingNodes, document, model, String.Empty, template.Subtemplates, null, configuration);
+			ModelChain modelChain = new ModelChain(path: String.Empty) { Submodel = model }; // root object is the head of tracked model chain items.
+
+			ProcessNodes(startingNodes, document, template.Subtemplates, modelChain, configuration);
 			return document.ToString();
 		}
 
@@ -60,7 +69,15 @@ namespace Nortal.Utilities.TextTemplating.Executing
 			return properlyCastedCommand;
 		}
 
-		private static String ProcessNodes(IList<SyntaxTreeNode> statesToExecute, StringBuilder document, Object model, String pathToModel, IDictionary<String, TextTemplate> subtemplates, LoopItemTrackingState currentLoopState, ExecutionConfiguration configuration)
+		/// <summary>
+		/// This method describes the actual translation of template commands into document
+		/// </summary>
+		/// <param name="statesToExecute">queue of commands to execute, FIFO.</param>
+		/// <param name="document">Collects the document generated so far</param>
+		/// <param name="subtemplates">List of prepared and usable subtemplates.</param>
+		/// <param name="modelChain">Models on which the current commands are executing. Contains a chosen model for each loop choice + the root model.</param>
+		/// <param name="configuration"></param>
+		private static void ProcessNodes(IList<SyntaxTreeNode> statesToExecute, StringBuilder document, IDictionary<String, TextTemplate> subtemplates, ModelChain modelChain, ExecutionConfiguration configuration)
 		{
 			var stateStack = new Stack<SyntaxTreeNode>(statesToExecute.Count);
 			PushAll(stateStack, statesToExecute);
@@ -86,8 +103,8 @@ namespace Nortal.Utilities.TextTemplating.Executing
 							var bindCommand = RequireCommandOfType<ModelPathCommand>(state);
 
 							String format;
-							var valuePath = RemoveFormatString(bindCommand, out format);
-							modelPathValue = ExtractValueUsingLoopStates(model, valuePath, currentLoopState, configuration.ValueExtractor);
+							var valuePath = RemoveFormatString(bindCommand, out format); //TODO: consider moving parsing formatString to Command object.
+							modelPathValue = ExtractValueUsingModelChain(valuePath, modelChain, configuration.ValueExtractor);
 							String formattedValue = FormatValue(configuration.ValueFormatter, valuePath, modelPathValue, format);
 							document.Append(formattedValue);
 						}
@@ -95,19 +112,19 @@ namespace Nortal.Utilities.TextTemplating.Executing
 					case CommandType.If:
 						{
 							var ifCommand = RequireCommandOfType<ModelPathCommand>(state);
-							modelPathValue = ExtractValueUsingLoopStates(model, ifCommand.ModelPath, currentLoopState, configuration.ValueExtractor);
-							Boolean? booleanValue = CastToBoolean(modelPathValue, ifCommand.ModelPath);
+							modelPathValue = ExtractValueUsingModelChain(ifCommand, modelChain, configuration.ValueExtractor);
+							Boolean? condition = CastToBoolean(modelPathValue, ifCommand.ModelPath);
 
 							//note: intentionally avoiding recursion, keep stacktrace cleaner.
 							//note: intentionally accepting null as false:
-							if (booleanValue == true) { PushAll(stateStack, state.PrimaryScope); }
+							if (condition == true) { PushAll(stateStack, state.PrimaryScope); }
 							else if (state.SecondaryScope != null) { PushAll(stateStack, state.SecondaryScope); }
 						}
 						break;
 					case CommandType.IfExists:
 						{
 							var ifExistsCommand = RequireCommandOfType<ModelPathCommand>(state);
-							modelPathValue = ExtractValueUsingLoopStates(model, ifExistsCommand.ModelPath, currentLoopState, configuration.ValueExtractor);
+							modelPathValue = ExtractValueUsingModelChain(ifExistsCommand, modelChain, configuration.ValueExtractor);
 							if (modelPathValue != null) { PushAll(stateStack, state.PrimaryScope); }
 							else if (state.SecondaryScope != null) { PushAll(stateStack, state.SecondaryScope); }
 						}
@@ -115,18 +132,19 @@ namespace Nortal.Utilities.TextTemplating.Executing
 					case CommandType.Loop:
 						{
 							var loopCommand = RequireCommandOfType<ModelPathCommand>(state);
-							modelPathValue = ExtractValueUsingLoopStates(model, loopCommand.ModelPath, currentLoopState, configuration.ValueExtractor);
+							modelPathValue = ExtractValueUsingModelChain(loopCommand, modelChain, configuration.ValueExtractor);
 							IEnumerable loopItems = CastValue<IEnumerable>(modelPathValue, loopCommand.ModelPath);
-							if (loopItems == null) { break; } // not requiring models to create empty collections.
+							if (loopItems == null) { break; } // we do not require models to create empty collections.
 
-							var subloopState = new LoopItemTrackingState(loopCommand.ModelPath, loopItems, currentLoopState);
+							var modelChainNextLink = new ModelChain(loopCommand.ModelPath, modelChain);
 							foreach (var item in loopItems)
 							{
-								subloopState.CurrentItem = item; //TODO: is tracking IEnumerator better approach ?
+								//updating loop modelChain link to next item.
+								modelChainNextLink.Submodel = item;
 
 								// using recursion for simplicity. More readble, avoids stack of stacks and releases objects faster.
 								// note that recursion depth is generally really shallow, typically just a few levels, definitely bounded as templates are finite strings.
-								ProcessNodes(state.PrimaryScope, document, item, loopCommand.ModelPath, subtemplates, subloopState, configuration);
+								ProcessNodes(state.PrimaryScope, document, subtemplates, modelChainNextLink, configuration);
 							}
 						}
 						break;
@@ -135,7 +153,7 @@ namespace Nortal.Utilities.TextTemplating.Executing
 							var subtemplateCommand = RequireCommandOfType<SubtemplateCommand>(state);
 							String subTemplateName = subtemplateCommand.SubtemplateName;
 
-							modelPathValue = ExtractValueUsingLoopStates(model, subtemplateCommand.ModelPath, currentLoopState, configuration.ValueExtractor);
+							modelPathValue = ExtractValueUsingModelChain(subtemplateCommand, modelChain, configuration.ValueExtractor);
 
 							TextTemplate foundTemplate;
 							if (subtemplates == null || !subtemplates.TryGetValue(subTemplateName, out foundTemplate))
@@ -151,26 +169,39 @@ namespace Nortal.Utilities.TextTemplating.Executing
 						throw new NotSupportedException("No execution implemented for command of type " + state.Command.Type + ".");
 				}
 			}
-			return document.ToString();
 		}
 
 
-
-		private static object ExtractValueUsingLoopStates(object model, string valuePath, LoopItemTrackingState loopState, IModelValueExtractor valueExtractor)
+		private static object ExtractValueUsingModelChain(ModelPathCommand command, ModelChain modelChain, IModelValueExtractor valueExtractor)
 		{
-			if (valuePath == "this") { return model; } // TODO == this.Patterns.Settings.SelfReferenceKeyword)
+			Debug.Assert(command != null);
+			return ExtractValueUsingModelChain(command.ModelPath, modelChain, valueExtractor);
+		}
 
-			var match = FindMatchingLoopState(loopState, valuePath);
-			if (match == null) { return valueExtractor.ExtractValue(model, valuePath); } // extract value from root model.
+		private static object ExtractValueUsingModelChain(string requestedPath, ModelChain modelChain, IModelValueExtractor valueExtractor)
+		{
+			// find out which model to use for parent (determines which loop items are used in this iteration)
+			var match = FindMatchingParentModel(modelChain, requestedPath);
+			Debug.Assert(match != null); // if nothing else then at least the root must match.
 
-			Debug.Assert(match != null);
-			// extracting value starting from latest matching loop item:
-			if (valuePath == match.Path) { return match.CurrentItem; }
-			Debug.Assert(valuePath.StartsWith(match.Path + "."));
-			string relativePath = valuePath.Substring(match.Path.Length + 1); // +1 skips the dot as well.
+			// shortcut on root model:
+			if (match.Parent == null) {
+				//special keyword "this" requires no walking at all from root
+				// TODO == this.Patterns.Settings.SelfReferenceKeyword)
+				if (requestedPath == "this") { return match.Submodel; }
+				
+				// no relative path calculation needed:
+				return valueExtractor.ExtractValue(match.Submodel, requestedPath);
+			}
 
-			object modelPathValue = valueExtractor.ExtractValue(match.CurrentItem, relativePath);
-			return modelPathValue;
+			//shortcut if requested value matches exactly a model in chain - no walking required:
+			if (requestedPath == match.submodelPath) { return match.Submodel; }
+
+			//we have a submodel but need to walk to sub-elements using a relative path:
+			Debug.Assert(requestedPath.StartsWith(match.submodelPath + "."));
+			string relativePath = requestedPath.Substring(match.submodelPath.Length + 1); // +1 skips the dot as well.
+			object requestedValue = valueExtractor.ExtractValue(match.Submodel, relativePath);
+			return requestedValue;
 		}
 
 		private static T CastValue<T>(Object modelValue, String path)
@@ -201,17 +232,19 @@ namespace Nortal.Utilities.TextTemplating.Executing
 			return castedValue; // intentionally pass null.
 		}
 
-		private static LoopItemTrackingState FindMatchingLoopState(LoopItemTrackingState loopState, string valuePath)
+		private static ModelChain FindMatchingParentModel(ModelChain modelChain, string valuePath)
 		{
-			while (loopState != null)
+			Debug.Assert(modelChain != null); // should have at least root state.
+			while (modelChain != null)
 			{
-				if (valuePath.StartsWith(loopState.Path))
+				if (modelChain.Parent == null) { return modelChain; }
+				if (valuePath.StartsWith(modelChain.submodelPath))
 				{
-					if (valuePath.Length == loopState.Path.Length) { return loopState; }
-					if (valuePath[loopState.Path.Length] == '.') { return loopState; } // don't be fooled with common prefix (ex: M.Items vs M.ItemsCount)
+					if (valuePath.Length == modelChain.submodelPath.Length) { return modelChain; }
+					if (valuePath[modelChain.submodelPath.Length] == '.') { return modelChain; } // don't be fooled with common prefix (ex: M.Items vs M.ItemsCount)
 				}
-				// no match, check parent:
-				loopState = loopState.ParentLoop;
+				// no match, go check parent:
+				modelChain = modelChain.Parent;
 			}
 			return null; // no match
 		}

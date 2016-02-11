@@ -146,17 +146,17 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			const String template = TemplateContentPrefix
 				+ "[[for(Children) ]]"
 				+ "[[	for(Children.Children) ]]"
-				+ "[[		Name]] -> [[Children.Name]] -> [[Children.Children.Name]]"
+				+ " | [[		Name]] -> [[Children.Name]] -> [[Children.Children.Name]]"
 				+ "[[	endfor(Children.Children) ]]"
 				+ "[[endfor(Children) ]]"
 				+ TemplateContentSuffix;
 
 			const String expectedResult = TemplateContentPrefix
-				+ "root -> Child1 -> Child11"
-				+ "root -> Child1 -> Child12"
-				+ "root -> Child1 -> Child13"
-				+ "root -> Child3 -> Child31"
-				+ "root -> Child3 -> Child32"
+				+ " | root -> Child1 -> Child11"
+				+ " | root -> Child1 -> Child12"
+				+ " | root -> Child1 -> Child13"
+				+ " | root -> Child3 -> Child31"
+				+ " | root -> Child3 -> Child32"
 				+ TemplateContentSuffix;
 
 			String actual = this.Engine.Process(template, model);

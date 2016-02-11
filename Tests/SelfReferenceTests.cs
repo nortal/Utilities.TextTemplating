@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nortal.Utilities.TextTemplating.Parsing;
+using Nortal.Utilities.TextTemplating.Executing;
 
 namespace Nortal.Utilities.TextTemplating.Tests
 {
@@ -66,14 +68,17 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			var model = new TestModel{Name = "Test"};
 
 			const String template = @""
-				+ "Model: [[Name]]"
+				+ "Model: [[Name]] "
 				+ "Subtemplate [[template(SUB, this)]]";
 
 			const String expected = @""
-				+ "Model: Test"
+				+ "Model: Test "
 				+ "Subtemplate SUB: Test";
 
-			String actual = new TestEngine().Process(template, model);
+			var parsed = TextTemplate.Parse(template);
+			parsed.AddSubtemplate("SUB", "SUB: [[Name]]");
+
+			String actual = TemplateExecutionEngine.CreateDocument(parsed, model);
 			Assert.AreEqual(expected, actual);
 		}
 	}
