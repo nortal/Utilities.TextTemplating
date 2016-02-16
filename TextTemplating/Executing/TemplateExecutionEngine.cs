@@ -148,7 +148,7 @@ namespace Nortal.Utilities.TextTemplating.Executing
 							}
 						}
 						break;
-					case CommandType.SubTemplate:
+					case CommandType.Subtemplate:
 						{
 							var subtemplateCommand = RequireCommandOfType<SubtemplateCommand>(state);
 							String subTemplateName = subtemplateCommand.SubtemplateName;

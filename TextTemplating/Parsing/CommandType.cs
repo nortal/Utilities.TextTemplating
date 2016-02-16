@@ -13,7 +13,7 @@
 		IfExistsEnd,
 		Loop,
 		LoopEnd,
-		SubTemplate,
+		Subtemplate,
 
 		//consider universal else/end commands which are not specific to if/ifexists/loop or argument but context-sensitive. explicit mode should be deprecated.
 		Else,

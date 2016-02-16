@@ -28,7 +28,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 				{
 					case CommandType.Copy:
 					case CommandType.BindFromModel:
-					case CommandType.SubTemplate:
+					case CommandType.Subtemplate:
 						// simple commans go straight to parent collection, no starting-closing scope.
 						scopeCollector.AddToScope(command);
 						continue;
@@ -140,7 +140,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 							modelPathCommand.ModelPath = RequireArgument(type, arguments, 0);
 							yield return modelPathCommand;
 							continue;
-						case CommandType.SubTemplate:
+						case CommandType.Subtemplate:
 							var command = new SubtemplateCommand(type, sentence);
 							command.SubtemplateName = RequireArgument(type, arguments, 0);
 							command.ModelPath = RequireArgument(type, arguments, 1);
@@ -180,7 +180,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			if (functionName == syntax.LoopStartCommand) { return CommandType.Loop; }
 			if (functionName == syntax.LoopEndCommand) { return CommandType.LoopEnd; }
 
-			if (functionName == syntax.SubtemplateCommand) { return CommandType.SubTemplate; }
+			if (functionName == syntax.SubtemplateCommand) { return CommandType.Subtemplate; }
 			return CommandType.Unspecified;
 		}
 	}
