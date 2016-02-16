@@ -8,14 +8,6 @@ namespace Nortal.Utilities.TextTemplating.Tests
 	[TestClass]
 	public class SubtemplatingTests
 	{
-		private class TestEngine : TemplateProcessingEngine
-		{
-			protected override string ResolveSubtemplateByName(string templateName)
-			{
-				return "Subtemplate " + templateName + ": [[Name]]";
-			}
-		}
-
 		[TestMethod]
 		public void TestSubTemplate()
 		{
@@ -40,7 +32,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			parsed.AddSubtemplate("MY", "Subtemplate MY: [[Name]]");
 			parsed.AddSubtemplate("ANOTHER", "Subtemplate ANOTHER: [[Name]]");
 
-			String actual = TemplateExecutionEngine.CreateDocument(parsed, model);
+			String actual = parsed.BuildDocument(model);
 			Assert.AreEqual(expected, actual);
 		}
 	}

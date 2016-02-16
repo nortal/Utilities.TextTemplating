@@ -1,20 +1,11 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nortal.Utilities.TextTemplating.Parsing;
-using Nortal.Utilities.TextTemplating.Executing;
 
 namespace Nortal.Utilities.TextTemplating.Tests
 {
 	[TestClass]
 	public class SelfReferenceTests
 	{
-		private class TestEngine : TemplateProcessingEngine
-		{
-			protected override string ResolveSubtemplateByName(string templateName)
-			{
-				return templateName + ": [[Name]]";
-			}
-		}
 
 		private class TestModel
 		{
@@ -37,7 +28,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			const String template = "[[this]]";
 			const String expected = "TestModelSelf";
 
-			String actual = new TestEngine().Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expected, actual);
 		}
 
@@ -58,7 +49,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 
 			const String expected = "12";
 
-			String actual = new TestEngine().Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expected, actual);
 		}
 
@@ -78,7 +69,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			var parsed = TextTemplate.Parse(template);
 			parsed.AddSubtemplate("SUB", "SUB: [[Name]]");
 
-			String actual = TemplateExecutionEngine.CreateDocument(parsed, model);
+			String actual = parsed.BuildDocument(model);
 			Assert.AreEqual(expected, actual);
 		}
 	}

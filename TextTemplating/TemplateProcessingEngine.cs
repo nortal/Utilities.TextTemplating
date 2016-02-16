@@ -33,7 +33,7 @@ namespace Nortal.Utilities.TextTemplating
 	/// <summary>
 	/// Class to provide tools for filling text templates with data from model objects.
 	/// </summary>
-	//[Obsolete("To be removed in future version. Use TextTemplate class API instead.")] // to uncomment once new API is finished.
+	[Obsolete("To be removed in future version. Use TextTemplate class API instead.")] // to uncomment once new API is finished.
 	public partial class TemplateProcessingEngine
 	{
 		public TemplateProcessingEngine()
@@ -94,18 +94,16 @@ namespace Nortal.Utilities.TextTemplating
 			return document;
 		}
 
+		[Obsolete("API no longer supports on-request subtemplate lookup. For subtemplates use TextTemplate class API instead.")]
 		protected virtual string ResolveSubtemplateByName(string templateName)
 		{
-
-			//Todo: 
-			throw new NotImplementedException("Override method to add project-specific template resolving logic.");
+			throw new NotSupportedException("API no longer supports on-request subtemplate lookup. For subtemplates use TextTemplate class API instead.");
 		}
 
 		public virtual ICollection<String> DiscoverValuePathsFromModel(Object model, int maximumDepth)
 		{
-			throw new NotImplementedException("TODO");
-			//return this.ValueExtractor.DiscoverValidValuePaths(model, maximumDepth).ToList()
-			//	.ConvertAll(item => this.Patterns.Settings.BeginTag + item + this.Patterns.Settings.EndTag);
+			return this.ValueExtractor.DiscoverValidValuePaths(model, maximumDepth).ToList()
+				.ConvertAll(item => this.Syntax.BeginTag + item + this.Syntax.EndTag);
 		}
 	}
 }

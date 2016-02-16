@@ -11,7 +11,7 @@ namespace Nortal.Utilities.TextTemplating.Executing
 	/// <summary>
 	/// Contains core logic about executing a parsed text template on a given model for generating a text document.
 	/// </summary>
-	public static class TemplateExecutionEngine
+	internal static class TemplateExecutionEngine
 	{
 
 		/// <summary>
@@ -21,7 +21,7 @@ namespace Nortal.Utilities.TextTemplating.Executing
 		/// <param name="model"></param>
 		/// <param name="configuration"></param>
 		/// <returns>Text document based on given template</returns>
-		public static String CreateDocument(TextTemplate template, Object model, ExecutionConfiguration configuration = null)
+		internal static String CreateDocument(TextTemplate template, Object model, ExecutionConfiguration configuration = null)
 		{
 			if (template == null) { throw new ArgumentNullException(nameof(template)); }
 			// model null CAN be acceptable in some scenarios.

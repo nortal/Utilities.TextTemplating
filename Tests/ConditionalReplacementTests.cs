@@ -14,14 +14,6 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		private const String ExpectedToken = @"GOOD";
 		private const String WrongToken = @"WRONG";
 
-		[TestInitialize]
-		public void Initialize()
-		{
-			this.Engine = new TemplateProcessingEngine();
-		}
-
-		private TemplateProcessingEngine Engine { get; set; }
-
 		[TestMethod]
 		public void TestConditionalIfTrue()
 		{
@@ -35,7 +27,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate. Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -51,7 +43,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			const String expectedResult = TemplateContentPrefix
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -68,7 +60,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -86,7 +78,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -104,7 +96,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -122,7 +114,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -138,7 +130,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ TemplateContentSuffix;
 
 			// ReSharper disable once UnusedVariable
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 		}
 
 		[TestMethod]
@@ -156,7 +148,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ TemplateContentSuffix;
 			expectedResult += expectedResult;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -181,7 +173,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ ExpectedToken + "2"
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -203,7 +195,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ model.Value
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -220,7 +212,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -237,7 +229,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				// nothing is added
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -255,7 +247,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -282,7 +274,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ "Value2"
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -295,7 +287,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ "[[ifexists(this)]]"
 				+ "data:"
 				+ "[[for(this)]]"
-				+ "[[this.Value]]"
+				+ "X"
 				+ "[[endfor(this)]]"
 				+ "[[endifexists(this)]]"
 				+ TemplateContentSuffix;
@@ -304,7 +296,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				//no "data:"
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 	}

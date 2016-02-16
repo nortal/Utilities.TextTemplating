@@ -1,20 +1,28 @@
 ﻿using System;
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading;
 
 namespace Nortal.Utilities.TextTemplating.Tests
 {
 	[TestClass]
 	public class FromattingTests
 	{
+		
+		private CultureInfo OriginalCulture { get; set; }
+
 		[TestInitialize]
 		public void Initialize()
 		{
-			this.Engine = new TemplateProcessingEngine();
-			this.Engine.FormattingCulture = CultureInfo.GetCultureInfo("et-ee");
+			this.OriginalCulture = CultureInfo.CurrentCulture;
+			Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("et-ee");
 		}
 
-		private TemplateProcessingEngine Engine { get; set; }
+		[TestCleanup]
+		public void TearDown()
+		{
+			Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("et-ee");
+		}
 
 		[TestMethod]
 		public void TestFormattingForDateDefault()
@@ -26,7 +34,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			const String template = "[[ADate]]";
 			const String expectedResult = "28.04.2011";
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -40,7 +48,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			const String template = "[[ADate]]";
 			const String expectedResult = "28.04.2011 17:58";
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -54,7 +62,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			const String template = "[[ADate:u]]";
 			const String expectedResult = "2011-04-28 17:58:41Z";
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -68,7 +76,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			const String template = @"[[ADate:""kala""dd]]";
 			const String expectedResult = "kala28";
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 	}

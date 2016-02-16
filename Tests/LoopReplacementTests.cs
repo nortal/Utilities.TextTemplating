@@ -11,14 +11,6 @@ namespace Nortal.Utilities.TextTemplating.Tests
 
 		private const String ExpectedValue = "EXPECTED";
 
-		[TestInitialize]
-		public void Initialize()
-		{
-			this.Engine = new TemplateProcessingEngine();
-		}
-
-		private TemplateProcessingEngine Engine { get; set; }
-
 		private class LoopTestModel
 		{
 			public LoopTestModel(String name) { this.Name = name; }
@@ -47,7 +39,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ ExpectedValue
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -69,7 +61,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ "root 3 Child1 Child2 Child3 "
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -114,7 +106,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ "Child32"
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -159,7 +151,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ " | root -> Child3 -> Child32"
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 

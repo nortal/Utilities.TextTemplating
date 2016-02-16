@@ -12,14 +12,6 @@ namespace Nortal.Utilities.TextTemplating.Tests
 
 		private static readonly String TemplateCommandSeparator = Environment.NewLine;
 
-		[TestInitialize]
-		public void Initialize()
-		{
-			this.Engine = new TemplateProcessingEngine();
-		}
-
-		private TemplateProcessingEngine Engine { get; set; }
-
 		private class MemberAccessTestModel
 		{
 #pragma warning disable 169
@@ -44,7 +36,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ model.Property
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -58,7 +50,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ TemplateContentSuffix;
 
 			// ReSharper disable once UnusedVariable
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 		}
 
 		[TestMethod]
@@ -89,7 +81,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ "System.Object"
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -109,7 +101,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 
 			const String template = "[[Child.SecondChild.Value]]";
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(ExpectedToken, actual);
 		}
 
@@ -128,7 +120,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			const String expectedResult = TemplateContentPrefix
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 
@@ -141,7 +133,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ "[[somecommand(Value)]]"
 				+ TemplateContentSuffix;
 
-			var parsed = this.Engine.ParseTemplate(template);
+			var parsedTemplate = TextTemplate.Parse(template);
 		}
 
 		[TestMethod]
@@ -156,7 +148,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ ExpectedToken
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 	}

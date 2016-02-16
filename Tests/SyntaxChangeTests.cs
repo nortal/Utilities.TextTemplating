@@ -11,9 +11,9 @@ namespace Nortal.Utilities.TextTemplating.Tests
 
 		private const String ExpectedValue = @"EXPECTED";
 
-		[TestInitialize]
-		public void Initialize()
+		private static SyntaxSettings CreateSettings()
 		{
+			// for testing we'll define a mixture of html-like tags and estonian translations of keywords:
 			SyntaxSettings settings = new SyntaxSettings();
 			settings.BeginTag = "<b>";
 			settings.EndTag = "</b>";
@@ -22,12 +22,10 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			settings.ConditionalEndCommand = "/kui";
 			settings.LoopStartCommand = "tsükkel";
 			settings.LoopEndCommand = "/tsükkel";
-
-			this.Engine = new TemplateProcessingEngine(settings);
+			return settings;
 		}
 
-		private TemplateProcessingEngine Engine { get; set; }
-
+		
 		[TestMethod]
 		public void TestCustomSyntax()
 		{
@@ -53,7 +51,8 @@ namespace Nortal.Utilities.TextTemplating.Tests
 				+ "XXX"
 				+ TemplateContentSuffix;
 
-			String actual = this.Engine.Process(template, model);
+			var parsed = TextTemplate.Parse(template, CreateSettings());
+			String actual = parsed.BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
 		}
 	}
