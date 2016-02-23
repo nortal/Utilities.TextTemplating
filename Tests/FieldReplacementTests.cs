@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace Nortal.Utilities.TextTemplating.Tests
 {
@@ -146,6 +147,38 @@ namespace Nortal.Utilities.TextTemplating.Tests
 
 			const String expectedResult = TemplateContentPrefix
 				+ ExpectedToken
+				+ TemplateContentSuffix;
+
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
+			Assert.AreEqual(expectedResult, actual);
+		}
+
+		[TestMethod]
+		public void TestFieldsSupportArrayLength()
+		{
+			var model = new { Value = new int[4] };
+			const String template = TemplateContentPrefix
+				+ "[[Value.Length]]"
+				+ TemplateContentSuffix;
+
+			const String expectedResult = TemplateContentPrefix
+				+ "4"
+				+ TemplateContentSuffix;
+
+			String actual = TextTemplate.Parse(template).BuildDocument(model);
+			Assert.AreEqual(expectedResult, actual);
+		}
+
+		[TestMethod]
+		public void TestFieldsSupportCollectionCount()
+		{
+			var model = new { Value = new List<Object>() { new Object(), new Object() } };
+			const String template = TemplateContentPrefix
+				+ "[[Value.Count]]"
+				+ TemplateContentSuffix;
+
+			const String expectedResult = TemplateContentPrefix
+				+ "2"
 				+ TemplateContentSuffix;
 
 			String actual = TextTemplate.Parse(template).BuildDocument(model);
