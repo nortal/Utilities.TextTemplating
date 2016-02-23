@@ -19,13 +19,9 @@
 using Nortal.Utilities.TextTemplating.Executing;
 using Nortal.Utilities.TextTemplating.Parsing;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Nortal.Utilities.TextTemplating
 {
@@ -33,7 +29,7 @@ namespace Nortal.Utilities.TextTemplating
 	/// <summary>
 	/// Class to provide tools for filling text templates with data from model objects.
 	/// </summary>
-	[Obsolete("To be removed in future version. Use TextTemplate class API instead.")] // to uncomment once new API is finished.
+	[Obsolete("To be removed in future version. Use TextTemplate class API instead.")]
 	public partial class TemplateProcessingEngine
 	{
 		public TemplateProcessingEngine()
