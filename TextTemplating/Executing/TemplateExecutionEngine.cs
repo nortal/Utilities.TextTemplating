@@ -125,7 +125,12 @@ namespace Nortal.Utilities.TextTemplating.Executing
 						{
 							var ifExistsCommand = RequireCommandOfType<ModelPathCommand>(state);
 							modelPathValue = ExtractValueUsingModelChain(ifExistsCommand, modelChain, configuration.ValueExtractor);
-							if (modelPathValue != null) { PushAll(stateStack, state.PrimaryScope); }
+							var asCollection = CastValue<ICollection>(modelPathValue, ifExistsCommand.ModelPath, suppressException: true);
+
+							Boolean condition = asCollection == null
+								? modelPathValue != null
+								: asCollection.Count > 0; // for collections consider only non-empty ones as "true"
+							if (condition) { PushAll(stateStack, state.PrimaryScope); }
 							else if (state.SecondaryScope != null) { PushAll(stateStack, state.SecondaryScope); }
 						}
 						break;
@@ -185,11 +190,12 @@ namespace Nortal.Utilities.TextTemplating.Executing
 			Debug.Assert(match != null); // if nothing else then at least the root must match.
 
 			// shortcut on root model:
-			if (match.Parent == null) {
+			if (match.Parent == null)
+			{
 				//special keyword "this" requires no walking at all from root
-				// TODO == this.Patterns.Settings.SelfReferenceKeyword)
+				// TODO: == this.Patterns.Settings.SelfReferenceKeyword)
 				if (requestedPath == "this") { return match.Submodel; }
-				
+
 				// no relative path calculation needed:
 				return valueExtractor.ExtractValue(match.Submodel, requestedPath);
 			}
@@ -204,11 +210,11 @@ namespace Nortal.Utilities.TextTemplating.Executing
 			return requestedValue;
 		}
 
-		private static T CastValue<T>(Object modelValue, String path)
+		private static T CastValue<T>(Object modelValue, String path, Boolean suppressException = false)
 			where T : class
 		{
 			T castedValue = modelValue as T;
-			if (castedValue == null && modelValue != null)
+			if (castedValue == null && modelValue != null && !suppressException)
 			{
 				throw new Exception(String.Format("Invalid type at path '{0}'. Expected {1}, found {2}",
 					path,

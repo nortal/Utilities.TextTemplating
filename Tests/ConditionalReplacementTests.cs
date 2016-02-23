@@ -278,6 +278,9 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			Assert.AreEqual(expectedResult, actual);
 		}
 
+		/// <summary>
+		/// This is a typical scenario where by "ifexists(collection)" we want to test if there are items.
+		/// </summary>
 		[TestMethod]
 		public void TestExistsCollectionConditionalIfEmpty()
 		{
