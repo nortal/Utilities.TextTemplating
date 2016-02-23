@@ -2,6 +2,7 @@
 using Nortal.Utilities.TextTemplating.Parsing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Nortal.Utilities.TextTemplating
 {
@@ -9,14 +10,15 @@ namespace Nortal.Utilities.TextTemplating
 	/// Represents a parsed and verified template which can be used for generating text documents.
 	/// Use static Parse() method for creating instances.
 	/// </summary>
+	[DebuggerDisplay(@" TextTemplate: {TemplateText}")]
 	public class TextTemplate
 	{
 		// Intentionally no public constructors as parsing a template is lot of work which can throw exceptions and object cannot be instantiated without parsed template.
 
-		internal TextTemplate(string originalTemplate, SyntaxTreeNode commandTree)
+		internal TextTemplate(string templateAsText, SyntaxTreeNode commandTree)
 		{
 			this.ParseTree = commandTree;
-			this.TemplateText = originalTemplate;
+			this.TemplateText = templateAsText;
 		}
 
 		/// <summary>
@@ -24,7 +26,7 @@ namespace Nortal.Utilities.TextTemplating
 		/// </summary>
 		/// <param name="documentTemplate"></param>
 		/// <param name="settings"></param>
-		/// <returns></returns>
+		/// <returns>Template with it's parsed form.</returns>
 		public static TextTemplate Parse(String documentTemplate, SyntaxSettings settings = null)
 		{
 			if (settings == null) { settings = new SyntaxSettings(); }
