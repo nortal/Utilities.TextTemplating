@@ -22,10 +22,11 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			settings.ConditionalEndCommand = "/kui";
 			settings.LoopStartCommand = "tsükkel";
 			settings.LoopEndCommand = "/tsükkel";
+			settings.SelfReferenceKeyword = "mina";
 			return settings;
 		}
 
-		
+
 		[TestMethod]
 		public void TestCustomSyntax()
 		{
@@ -54,6 +55,30 @@ namespace Nortal.Utilities.TextTemplating.Tests
 			var parsed = TextTemplate.Parse(template, CreateSettings());
 			String actual = parsed.BuildDocument(model);
 			Assert.AreEqual(expectedResult, actual);
+		}
+
+		[TestMethod]
+		public void TestCustomSyntaxSelfReferenceKeyword()
+		{
+			Object model = new { Value = "ModelHere" };
+
+			const String template = @""
+				+ "<b>Value</b>"
+				+ "<b>template(MY, mina)</b>"
+				+ "<b>template(ANOTHER, mina)</b>";
+
+			const String expected = @""
+				+ "ModelHere"
+				+ "Subtemplate MY: ModelHere"
+				+ "Subtemplate ANOTHER: ModelHere";
+
+			var syntax = CreateSettings();
+			var parsed = TextTemplate.Parse(template, syntax);
+			parsed.AddSubtemplate("MY", "Subtemplate MY: <b>Value</b>", syntax);
+			parsed.AddSubtemplate("ANOTHER", "Subtemplate ANOTHER: <b>Value</b>", syntax);
+
+			String actual = parsed.BuildDocument(model);
+			Assert.AreEqual(expected, actual);
 		}
 	}
 }

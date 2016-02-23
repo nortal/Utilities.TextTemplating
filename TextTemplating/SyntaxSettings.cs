@@ -26,8 +26,6 @@ namespace Nortal.Utilities.TextTemplating
 	/// </summary>
 	public class SyntaxSettings
 	{
-		//TODO: consider working on interface to allow taking these from existing Settings file.
-
 		public SyntaxSettings()
 		{
 			ResetToDefaults();
@@ -45,10 +43,12 @@ namespace Nortal.Utilities.TextTemplating
 
 		public String SubtemplateCommand { get; set; }
 		public String SelfReferenceKeyword { get; set; }
+		internal const String DefaultSelfReferenceKeyword = @"this";
 
 		public String ExistsStartCommand { get; set; }
 		public String ExistsElseCommand { get; set; }
 		public String ExistsEndCommand { get; set; }
+
 
 		/// <summary>
 		/// Resets settings to default english values.
@@ -66,7 +66,7 @@ namespace Nortal.Utilities.TextTemplating
 			LoopEndCommand = @"endfor";
 
 			SubtemplateCommand = @"template";
-			SelfReferenceKeyword = @"this";
+			SelfReferenceKeyword = DefaultSelfReferenceKeyword;
 
 			ExistsStartCommand = @"ifexists";
 			ExistsElseCommand = @"elseexists";
@@ -74,7 +74,7 @@ namespace Nortal.Utilities.TextTemplating
 		}
 
 		/// <summary>
-		/// Performs various checks to make sure provided settings are valid for lexer/parser assumptions
+		/// Performs various checks to make sure provided settings are valid both individually and as a set for parser assumptions.
 		/// </summary>
 		private void Validate()
 		{
@@ -89,6 +89,7 @@ namespace Nortal.Utilities.TextTemplating
 				ExistsElseCommand,
 				ExistsEndCommand,
 				SubtemplateCommand,
+				SelfReferenceKeyword,
 			};
 
 			// Make sure begin and end tags can be differentiated without looking for pair match.

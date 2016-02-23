@@ -138,12 +138,14 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 						case CommandType.LoopEnd:
 							var modelPathCommand = new ModelPathCommand(type, sentence);
 							modelPathCommand.ModelPath = RequireArgument(type, arguments, 0);
+							NormalizeSelfReferencePath(modelPathCommand, syntax);
 							yield return modelPathCommand;
 							continue;
 						case CommandType.Subtemplate:
 							var command = new SubtemplateCommand(type, sentence);
 							command.SubtemplateName = RequireArgument(type, arguments, 0);
 							command.ModelPath = RequireArgument(type, arguments, 1);
+							NormalizeSelfReferencePath(command, syntax);
 							yield return command;
 							continue;
 						case CommandType.Unspecified:
@@ -162,12 +164,32 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			}
 		}
 
+		/// <summary>
+		/// Replaces localized self reference path marker "this" to it's internal marker.
+		/// This ensures the special meaning persistence also during execution where the customized syntax settings are no longer available.
+		/// </summary>
+		/// <param name="modelPathCommand"></param>
+		/// <param name="syntax"></param>
+		private static void NormalizeSelfReferencePath(ModelPathCommand modelPathCommand, SyntaxSettings syntax)
+		{
+			if (modelPathCommand.ModelPath == syntax.SelfReferenceKeyword)
+			{
+				modelPathCommand.ModelPath = SyntaxSettings.DefaultSelfReferenceKeyword;
+			}
+		}
+
 		private static String RequireArgument(CommandType type, string[] arguments, int argumentIndex)
 		{
 			if (arguments == null || arguments.Length < argumentIndex) { throw new Exception("Missing expected argument for command function."); }
 			return arguments[argumentIndex];
 		}
 
+		/// <summary>
+		/// Maps localized command name strings to their internal enum value.
+		/// </summary>
+		/// <param name="functionName"></param>
+		/// <param name="syntax"></param>
+		/// <returns></returns>
 		private static CommandType RecognizeFunctionName(string functionName, SyntaxSettings syntax)
 		{
 			if (functionName == syntax.ConditionalStartCommand) { return CommandType.If; }
