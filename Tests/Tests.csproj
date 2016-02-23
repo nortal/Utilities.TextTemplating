@@ -61,6 +61,7 @@
     <Compile Include="FromattingTests.cs" />
     <Compile Include="ReflectionBasedValueExtractorTests.cs" />
     <Compile Include="SubtemplatingTests.cs" />
+    <Compile Include="SyntaxValidationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TextTemplating\Nortal.Utilities.TextTemplating.csproj">

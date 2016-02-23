@@ -40,12 +40,12 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 					case CommandType.IfElse:
 					case CommandType.IfExistsElse:
 					case CommandType.Else:
-						ValidateElseCommand(scopeCollector.ActiveCommand, command);
+						ValidateCommandWithParentScope(scopeCollector.ActiveCommand, command);
 						scopeCollector.StartChildScope(command);
 						break;
 					case CommandType.IfEnd:
 					case CommandType.IfExistsEnd:
-						ValidateExplicitEndCommand(scopeCollector.ActiveCommand, command);
+						ValidateCommandWithParentScope(scopeCollector.ActiveCommand, command);
 						var conditionalNode = new SyntaxTreeNode();
 
 						if (scopeCollector.ActiveCommand.Type == CommandType.IfElse || scopeCollector.ActiveCommand.Type == CommandType.IfExistsElse)
@@ -63,7 +63,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 						scopeCollector.AddToScope(conditionalNode);
 						break;
 					case CommandType.LoopEnd:
-						ValidateExplicitLoopEnd(scopeCollector.ActiveCommand, command);
+						ValidateCommandWithParentScope(scopeCollector.ActiveCommand, command);
 						var loopNode = new SyntaxTreeNode(scopeCollector.ActiveCommand);
 						loopNode.PrimaryScope = scopeCollector.ActiveScope;
 						scopeCollector.RestoreParentScope();
@@ -85,7 +85,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			// verify no scope is left unclosed:
 			if (scopeCollector.ActiveCommand != null)
 			{
-				throw new Exception("Started command was not properly closed with and ending tag. Command: " + scopeCollector.ActiveCommand);
+				throw new TemplateProcessingException("Started command was not properly closed with and ending tag. Command: " + scopeCollector.ActiveCommand);
 			}
 
 			// bring scope items under a single tree root:
@@ -95,19 +95,85 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 		}
 
 
-		private static void ValidateExplicitLoopEnd(Command activeCommand, Command command)
+		private static void ValidateCommandWithParentScope(Command parentCommand, Command currentCommand)
 		{
-			//throw new NotImplementedException();
+			switch (currentCommand.Type)
+			{
+				case CommandType.Copy:
+				case CommandType.BindFromModel:
+				case CommandType.If:
+				case CommandType.IfExists:
+				case CommandType.Loop:
+				case CommandType.Subtemplate:
+					throw new InvalidOperationException("Validation should only be called for scope continuation commands, current command: " + currentCommand.Type);
+				case CommandType.IfElse:
+					RequireMatchingActiveCommandType(parentCommand, currentCommand, CommandType.If);
+					RequireMatchingModelPath(parentCommand, currentCommand);
+                    break;
+				case CommandType.IfExistsElse:
+					RequireMatchingActiveCommandType(parentCommand, currentCommand, CommandType.IfExists);
+					RequireMatchingModelPath(parentCommand, currentCommand);
+					break;
+				case CommandType.IfEnd:
+					RequireMatchingActiveCommandType(parentCommand, currentCommand, CommandType.If, CommandType.IfElse);
+					RequireMatchingModelPath(parentCommand, currentCommand);
+					break;
+				case CommandType.IfExistsEnd:
+					RequireMatchingActiveCommandType(parentCommand, currentCommand, CommandType.IfExists, CommandType.IfExistsElse);
+					RequireMatchingModelPath(parentCommand, currentCommand);
+					break;
+				case CommandType.LoopEnd:
+					RequireMatchingActiveCommandType(parentCommand, currentCommand, CommandType.Loop);
+					RequireMatchingModelPath(parentCommand, currentCommand);
+					break;
+				default:
+					throw new NotImplementedException("Validation rules not specified for " + currentCommand.Type);
+			}
 		}
 
-		private static void ValidateExplicitEndCommand(Command activeCommand, Command command)
+		private static void RequireMatchingModelPath(Command activeCommand, Command currentCommand)
 		{
-			//throw new NotImplementedException();
+			Debug.Assert(activeCommand != null);
+			Debug.Assert(currentCommand != null);
+			var activeModelPathCommand = activeCommand as ModelPathCommand;
+			if (activeModelPathCommand == null) { throw new TemplateProcessingException($"ModelPathCommand expected but '{activeCommand}' found."); }
+			var currentModelPathCommand = currentCommand as ModelPathCommand;
+			if (currentModelPathCommand == null) { throw new TemplateProcessingException($"ModelPathCommand expected but '{currentCommand}' found."); }
+
+			if (activeModelPathCommand.ModelPath != currentModelPathCommand.ModelPath)
+			{
+				throw new TemplateProcessingException($"Scope boundary commands do not match: '{activeCommand}' vs '{currentCommand}'.");
+			}
 		}
 
-		private static void ValidateElseCommand(Command activeCommand, Command command)
+
+		//TODO: avoid duplication for this overloads
+		private static void RequireMatchingActiveCommandType(Command activeCommand, Command currentCommand, CommandType requiredType)
 		{
-			//throw new NotImplementedException();
+			if (activeCommand == null)
+			{
+				throw new TemplateProcessingException($"Invalid template. No starting command found for '{currentCommand}'.");
+			}
+
+			Boolean isMatch = activeCommand.Type == requiredType;
+			if (!isMatch)
+			{
+				throw new TemplateProcessingException($"Invalid template. Unexpected command '{currentCommand}' does not match active command of '{activeCommand}'.");
+			}
+		}
+
+		private static void RequireMatchingActiveCommandType(Command activeCommand, Command currentCommand, CommandType requiredType1, CommandType requiredType2)
+		{
+			if (activeCommand == null)
+			{
+				throw new TemplateProcessingException($"Invalid template. No starting command found for '{currentCommand}'.");
+			}
+
+			Boolean isMatch = activeCommand.Type == requiredType1 || activeCommand.Type == requiredType2;
+			if (!isMatch)
+			{
+				throw new TemplateProcessingException($"Invalid template. Unexpected command '{currentCommand}' does not match active command of '{activeCommand}'.");
+			}
 		}
 
 		private static IEnumerable<Command> ParseSentencesToCommands(IEnumerable<TemplateSentence> sentences, SyntaxSettings syntax)
