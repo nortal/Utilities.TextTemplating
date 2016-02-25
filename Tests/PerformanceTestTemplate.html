@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<title>Performance test: reflection model</title>
+	<style>
+		body {
+			padding: 20px;
+		}
+
+		header.top {
+			background-color: lightseagreen;
+			padding: 20px;
+		}
+
+		article.assembly {
+			border: 1px solid lightseagreen;
+			padding: 30px;
+			background-color: azure;
+		}
+
+		h2 {
+			margin-top: 0px;
+		}
+
+		article.type {
+			border: 1px solid aquamarine;
+			margin: 20px;
+			padding: 10px;
+			background-color: azure;
+		}
+
+		section h3 {
+			background-color: aquamarine;
+			padding: 20px;
+			margin-top: 0px;
+		}
+	</style>
+</head>
+<body>
+	<header class="top">
+		<h1>Performance test: reflection model</h1>
+		<section>
+			<p>Does a quick performance test by querying a bunch of metadata from a .net system assembly using reflection. </p>
+		</section>
+	</header>
+	<article class="assembly">
+		<section>
+			<h2>Assembly: [[FullName]]</h2>
+			Loaded from: [[Location]]<br />
+			Manifest from module: [[ManifestModule.Name]]
+		</section>
+
+		<section>
+			<h2>Types</h2>
+			[[for(Types)]]
+			<article class="type">
+				<h3>Type [[Types.FullName]]</h3>
+				[[ ifexists(Types.Methods)]]
+				<section>
+					<h4>Methods:</h4>
+					<ul>
+						[[ for(Types.Methods) ]]
+						<li>[[Types.Methods.MemberType]] [[Types.Methods.Name]](..)</li>
+						[[ endfor(Types.Methods) ]]
+					</ul>
+				</section>
+				[[ endifexists(Types.Methods)]]
+
+				[[ifexists(Types.Properties)]]
+				<section>
+					<h4>Properties:</h4>
+					<ul>
+						[[ for(Types.Properties) ]]
+						<li>[[Types.Properties.MemberType]] [[Types.Properties.Name]]</li>
+						[[ endfor(Types.Properties) ]]
+					</ul>
+				</section>
+				[[ endifexists(Types.Properties)]]
+
+				[[ ifexists(Types.Fields)]]
+				<section>
+					<h4>Fields:</h4>
+					<ul>
+						[[ for(Types.Fields) ]]
+						<li> [[Types.Fields.MemberType]] [[Types.Fields.Name]]</li>
+						[[ endfor(Types.Fields) ]]
+					</ul>
+				</section>
+				[[ endifexists(Types.Fields)]]
+			</article>
+			[[endfor(Types)]]
+		</section>
+	</article>
+</body>
+</html>

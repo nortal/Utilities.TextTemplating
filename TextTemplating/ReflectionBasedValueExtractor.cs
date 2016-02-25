@@ -74,7 +74,7 @@ namespace Nortal.Utilities.TextTemplating
 			}
 		}
 
-		public object ExtractValue(object model, String valuePath)
+		public virtual object ExtractValue(object model, String valuePath)
 		{
 			try
 			{
