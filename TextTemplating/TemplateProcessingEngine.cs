@@ -16,7 +16,6 @@
 	This file is from project https://github.com/NortalLTD/Utilities.TextTemplating, Nortal.Utilities.TextTemplating, file 'TemplateProcessingEngine.cs'.
 */
 
-using Nortal.Utilities.TextTemplating.Executing;
 using Nortal.Utilities.TextTemplating.Parsing;
 using System;
 using System.Collections.Generic;

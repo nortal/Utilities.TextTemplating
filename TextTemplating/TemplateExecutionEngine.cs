@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace Nortal.Utilities.TextTemplating.Executing
+namespace Nortal.Utilities.TextTemplating
 {
 	/// <summary>
 	/// Contains core logic about executing a parsed text template on a given model for generating a text document.
@@ -31,7 +31,7 @@ namespace Nortal.Utilities.TextTemplating.Executing
 			List<SyntaxTreeNode> startingNodes = SetStartingNodes(template.ParseTree);
 
 			StringBuilder document = new StringBuilder(); //TODO: test stream later, optimize for <1MB documents.
-			ModelChain modelChain = new ModelChain(path: String.Empty) { Submodel = model }; // root object is the head of tracked model chain items.
+			var modelChain = new SubmodelChainLink(path: String.Empty) { Submodel = model }; // root object is the head of tracked model chain items.
 
 			ProcessNodes(startingNodes, document, template.Subtemplates, modelChain, configuration);
 			return document.ToString();
@@ -77,7 +77,7 @@ namespace Nortal.Utilities.TextTemplating.Executing
 		/// <param name="subtemplates">List of prepared and usable subtemplates.</param>
 		/// <param name="modelChain">Models on which the current commands are executing. Contains a chosen model for each loop choice + the root model.</param>
 		/// <param name="configuration"></param>
-		private static void ProcessNodes(IList<SyntaxTreeNode> statesToExecute, StringBuilder document, IDictionary<String, TextTemplate> subtemplates, ModelChain modelChain, ExecutionConfiguration configuration)
+		private static void ProcessNodes(IList<SyntaxTreeNode> statesToExecute, StringBuilder document, IDictionary<String, TextTemplate> subtemplates, SubmodelChainLink modelChain, ExecutionConfiguration configuration)
 		{
 			var stateStack = new Stack<SyntaxTreeNode>(statesToExecute.Count);
 			PushAll(stateStack, statesToExecute);
@@ -141,7 +141,7 @@ namespace Nortal.Utilities.TextTemplating.Executing
 							IEnumerable loopItems = CastValue<IEnumerable>(modelPathValue, loopCommand.ModelPath);
 							if (loopItems == null) { break; } // we do not require models to create empty collections.
 
-							var modelChainNextLink = new ModelChain(loopCommand.ModelPath, modelChain);
+							var modelChainNextLink = new SubmodelChainLink(loopCommand.ModelPath, modelChain);
 							foreach (var item in loopItems)
 							{
 								//updating loop modelChain link to next item.
@@ -177,13 +177,13 @@ namespace Nortal.Utilities.TextTemplating.Executing
 		}
 
 
-		private static object ExtractValueUsingModelChain(ModelPathCommand command, ModelChain modelChain, IModelValueExtractor valueExtractor)
+		private static object ExtractValueUsingModelChain(ModelPathCommand command, SubmodelChainLink modelChain, IModelValueExtractor valueExtractor)
 		{
 			Debug.Assert(command != null);
 			return ExtractValueUsingModelChain(command.ModelPath, modelChain, valueExtractor);
 		}
 
-		private static object ExtractValueUsingModelChain(string requestedPath, ModelChain modelChain, IModelValueExtractor valueExtractor)
+		private static object ExtractValueUsingModelChain(string requestedPath, SubmodelChainLink modelChain, IModelValueExtractor valueExtractor)
 		{
 			// find out which model to use for parent (determines which loop items are used in this iteration)
 			var match = FindMatchingParentModel(modelChain, requestedPath);
@@ -238,7 +238,7 @@ namespace Nortal.Utilities.TextTemplating.Executing
 			return castedValue; // intentionally pass null.
 		}
 
-		private static ModelChain FindMatchingParentModel(ModelChain modelChain, string valuePath)
+		private static SubmodelChainLink FindMatchingParentModel(SubmodelChainLink modelChain, string valuePath)
 		{
 			Debug.Assert(modelChain != null); // should have at least root state.
 			while (modelChain != null)

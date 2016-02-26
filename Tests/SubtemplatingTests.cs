@@ -1,7 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nortal.Utilities.TextTemplating.Parsing;
-using Nortal.Utilities.TextTemplating.Executing;
 
 namespace Nortal.Utilities.TextTemplating.Tests
 {

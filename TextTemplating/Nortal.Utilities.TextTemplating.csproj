@@ -57,9 +57,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultTemplateValueFormatter.cs" />
-    <Compile Include="Executing\ExecutionConfiguration.cs" />
-    <Compile Include="Executing\ModelChain.cs" />
-    <Compile Include="Executing\TemplateExecutionEngine.cs" />
+    <Compile Include="ExecutionConfiguration.cs" />
+    <Compile Include="SubmodelChainLink.cs" />
+    <Compile Include="TemplateExecutionEngine.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IModelValueExtractor.cs" />
     <Compile Include="ITemplateValueFormatter.cs" />

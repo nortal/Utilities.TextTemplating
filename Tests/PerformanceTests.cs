@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nortal.Utilities.TextTemplating.Executing;
 using System;
 using System.Diagnostics;
 using System.IO;
