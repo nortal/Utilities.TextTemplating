@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="DefaultTemplateValueFormatter.cs" />
     <Compile Include="ExecutionConfiguration.cs" />
+    <Compile Include="Parsing\TemplateSyntaxException.cs" />
     <Compile Include="SubmodelChainLink.cs" />
     <Compile Include="TemplateExecutionEngine.cs" />
     <Compile Include="GlobalSuppressions.cs" />

@@ -1,5 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nortal.Utilities.TextTemplating.Parsing;
+using System;
 using System.Collections.Generic;
 
 namespace Nortal.Utilities.TextTemplating.Tests
@@ -127,7 +128,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 
 		//TODO: test no longer valid. now invalid command should throw. 
 		[TestMethod]
-		[ExpectedException(typeof(TemplateProcessingException))]
+		[ExpectedException(typeof(TemplateSyntaxException))]
 		public void TestInvalidCommandThrowsException()
 		{
 			const String template = TemplateContentPrefix

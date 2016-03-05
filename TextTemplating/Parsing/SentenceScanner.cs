@@ -47,13 +47,13 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 				int sentenceLength;
 				if (commandStartIndex == currentIndex)
 				{
-					if (isInCommandMode) { throw new Exception("Command mode already started. Previous commands must be closed first."); }
+					if (isInCommandMode) { throw new TemplateSyntaxException("Command mode already started. Previous commands must be closed first."); }
 					isInCommandMode = true;
 					sentenceLength = startTag.Length;
 				}
 				else if (commandEndIndex == currentIndex)
 				{
-					if (!isInCommandMode) { throw new Exception("Unexpected command end before a command start."); }
+					if (!isInCommandMode) { throw new TemplateSyntaxException("Unexpected command end before a command start."); }
 					isInCommandMode = false;
 					sentenceLength = endTag.Length;
 				}

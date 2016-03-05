@@ -85,7 +85,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			// verify no scope is left unclosed:
 			if (scopeCollector.ActiveCommand != null)
 			{
-				throw new TemplateProcessingException("Started command was not properly closed with and ending tag. Command: " + scopeCollector.ActiveCommand);
+				throw new TemplateSyntaxException(scopeCollector.ActiveCommand, "Started scoped command was not properly closed with and ending tag.");
 			}
 
 			// bring scope items under a single tree root:
@@ -136,13 +136,13 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			Debug.Assert(activeCommand != null);
 			Debug.Assert(currentCommand != null);
 			var activeModelPathCommand = activeCommand as ModelPathCommand;
-			if (activeModelPathCommand == null) { throw new TemplateProcessingException($"ModelPathCommand expected but '{activeCommand}' found."); }
+			if (activeModelPathCommand == null) { throw new TemplateSyntaxException(currentCommand, $"ModelPathCommand expected but '{activeCommand}' found."); }
 			var currentModelPathCommand = currentCommand as ModelPathCommand;
-			if (currentModelPathCommand == null) { throw new TemplateProcessingException($"ModelPathCommand expected but '{currentCommand}' found."); }
+			if (currentModelPathCommand == null) { throw new TemplateSyntaxException(currentCommand, $"ModelPathCommand expected but '{currentCommand}' found."); }
 
 			if (activeModelPathCommand.ModelPath != currentModelPathCommand.ModelPath)
 			{
-				throw new TemplateProcessingException($"Scope boundary commands do not match: '{activeCommand}' vs '{currentCommand}'.");
+				throw new TemplateSyntaxException(activeCommand, $"Scope boundary commands do not match: '{activeCommand}' vs '{currentCommand}'.");
 			}
 		}
 
@@ -150,13 +150,13 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 		{
 			if (activeCommand == null)
 			{
-				throw new TemplateProcessingException($"Invalid template. No starting command found for '{currentCommand}'.");
+				throw new TemplateSyntaxException(currentCommand, $"Invalid template. No starting command found for '{currentCommand}'.");
 			}
 
 			Boolean isMatch = activeCommand.Type == requireType || activeCommand.Type == alternativeType;
 			if (!isMatch)
 			{
-				throw new TemplateProcessingException($"Invalid template. Unexpected command '{currentCommand}' does not match active command of '{activeCommand}'.");
+				throw new TemplateSyntaxException(currentCommand, $"Unexpected command '{currentCommand}' does not match active command of '{activeCommand}'.");
 			}
 		}
 
@@ -199,7 +199,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 							yield return command;
 							continue;
 						case CommandType.Unspecified:
-							throw new TemplateProcessingException("Unrecognized control command found in sentence " + sentence.ToString());
+							throw new TemplateSyntaxException(sentence, "Unrecognized control command.");
 						default:
 							throw new NotImplementedException("Unhandled command found with type: " + type);
 					}

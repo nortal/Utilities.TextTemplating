@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nortal.Utilities.TextTemplating.Parsing;
 using System;
 
 namespace Nortal.Utilities.TextTemplating.Tests
@@ -7,7 +8,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 	public class SyntaxValidationTests
 	{
 		[TestMethod]
-		[ExpectedException(typeof(TemplateProcessingException))]
+		[ExpectedException(typeof(TemplateSyntaxException))]
 		public void TestSyntaxValidation_ElseWithoutIfThrows()
 		{
 			const String template = @"
@@ -25,7 +26,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(TemplateProcessingException))]
+		[ExpectedException(typeof(TemplateSyntaxException))]
 		public void TestSyntaxValidation_IfWithMismatchingEndThrows()
 		{
 			const String template = @"
@@ -43,7 +44,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(TemplateProcessingException))]
+		[ExpectedException(typeof(TemplateSyntaxException))]
 		public void TestSyntaxValidation_LoopWithoutEndThrows()
 		{
 			const String template = @"
@@ -61,7 +62,7 @@ some content, no end.
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(TemplateProcessingException))]
+		[ExpectedException(typeof(TemplateSyntaxException))]
 		public void TestSyntaxValidation_LoopWithMismatchingEndThrows()
 		{
 			const String template = @"

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Nortal.Utilities.TextTemplating.Parsing
 {
 	/// <summary>
 	/// Represents a meaningful section of template - either a block of text content or a templating language command.
 	/// </summary>
+	[Serializable]
 	public class TemplateSentence
 	{
 		public TemplateSentence(String text, Boolean isCommand)
