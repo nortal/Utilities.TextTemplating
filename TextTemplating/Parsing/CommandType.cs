@@ -1,10 +1,16 @@
 ﻿namespace Nortal.Utilities.TextTemplating.Parsing
 {
+	/// <summary>
+	/// Named identifier of type of command
+	/// </summary>
 	public enum CommandType : byte
 	{
 		Unspecified = 0,
+		// Non-functions:
 		Copy,
 		BindFromModel,
+		
+		// Functions:
 		If,
 		IfElse,
 		IfEnd,

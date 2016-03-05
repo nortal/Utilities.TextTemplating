@@ -7,7 +7,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 	/// <summary>
 	/// Scans the initial template text and separates commands from non-commands.
 	/// </summary>
-	public static class SentenceScanner
+	internal static class SentenceScanner
 	{
 		/// <summary>
 		/// Turns input into stream of sentences this template is built with.

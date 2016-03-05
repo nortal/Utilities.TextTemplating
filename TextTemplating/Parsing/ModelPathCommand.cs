@@ -7,9 +7,8 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 	/// </summary>
 	public class ModelPathCommand : Command
 	{
-		public ModelPathCommand() { }
 		public ModelPathCommand(CommandType type, TemplateSentence source) : base(type, source) { }
 
-		internal String ModelPath { get; set; }
+		public String ModelPath { get; internal set; }
 	}
 }

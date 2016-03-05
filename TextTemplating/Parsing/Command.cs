@@ -4,9 +4,10 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 {
 	public class Command
 	{
-		public Command() { }
 		public Command(CommandType type, TemplateSentence source)
 		{
+			if (source == null) { throw new ArgumentNullException(nameof(source)); }
+
 			this.Source = source;
 			this.Type = type;
 		}
@@ -15,7 +16,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 
 		public override string ToString()
 		{
-			return this.Type + ": " + this.Source.OriginalText;
+			return this.Type + ": " + this.Source.Text;
 		}
 	}
 }

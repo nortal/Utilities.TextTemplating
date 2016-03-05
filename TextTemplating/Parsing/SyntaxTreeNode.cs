@@ -3,7 +3,7 @@
 namespace Nortal.Utilities.TextTemplating.Parsing
 {
 	/// <summary>
-	/// Represents a subtree of template syntax tree.
+	/// Represents a subtree of template syntax tree with a single executable command at its root.
 	/// </summary>
 	public class SyntaxTreeNode
 	{
@@ -19,7 +19,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 		/// Collection of child commands. Null if not applicable to current command.
 		/// </summary>
 		public List<SyntaxTreeNode> PrimaryScope { get; internal set; }
-		
+
 		/// <summary>
 		/// Secondary collection of child commands. For example, to store the else-branch in a if-else-command. Null if not applicable to current command.
 		/// </summary>

@@ -21,9 +21,25 @@ using System.Collections.Generic;
 
 namespace Nortal.Utilities.TextTemplating
 {
+	/// <summary>
+	/// Class to control logic how model paths are translated to values.
+	/// </summary>
 	public interface IModelValueExtractor
 	{
+		/// <summary>
+		/// Determine value which corresponds to given model path on given model.
+		/// </summary>
+		/// <param name="model">Object to extract values from.</param>
+		/// <param name="valuePath">Path to value to pick from model. Can span multiple levels using "." as separator. Ex: "SubModel.Thingy.Name"</param>
+		/// <returns>Value from requested path.</returns>
 		Object ExtractValue(Object model, String valuePath);
+
+		/// <summary>
+		/// Provides a list of valid value paths extractable from given model using this class.
+		/// </summary>
+		/// <param name="exampleModel">Model to analyze.</param>
+		/// <param name="maximumDepth">Depth limit to look into.</param>
+		/// <returns>List of valid markers</returns>
 		IEnumerable<String> DiscoverValidValuePaths(Object exampleModel, int maximumDepth);
 		
 	}

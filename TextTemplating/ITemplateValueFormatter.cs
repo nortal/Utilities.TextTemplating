@@ -17,14 +17,20 @@
 */
 
 using System;
-using System.Globalization;
 
 namespace Nortal.Utilities.TextTemplating
 {
+	/// <summary>
+	/// Class to control logic how extracted values will be formatted to generated document. For example: handling dates, etc.
+	/// </summary>
 	public interface ITemplateValueFormatter
 	{
-		CultureInfo Culture { get; set; }
-
+		/// <summary>
+		/// Turns value extracted from model into its string representation which is to be included in output document.
+		/// </summary>
+		/// <param name="value">Raw value to format</param>
+		/// <param name="format">formatstring as explicitly given by template.</param>
+		/// <returns>formatted value</returns>
 		String FormatValue(Object value, String format);
 	}
 }

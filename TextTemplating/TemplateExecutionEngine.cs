@@ -95,7 +95,7 @@ namespace Nortal.Utilities.TextTemplating
 					case CommandType.Copy:
 						{
 							var copyCommand = RequireCommandOfType<Command>(state);
-							document.Append(copyCommand.Source.OriginalText);
+							document.Append(copyCommand.Source.Text);
 						}
 						break;
 					case CommandType.BindFromModel:

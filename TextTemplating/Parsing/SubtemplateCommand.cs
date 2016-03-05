@@ -7,9 +7,8 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 	/// </summary>
 	public class SubtemplateCommand : ModelPathCommand
 	{
-		public SubtemplateCommand() { }
 		public SubtemplateCommand(CommandType type, TemplateSentence source) : base(type, source) { }
 
-		internal String SubtemplateName { get; set; }
+		public String SubtemplateName { get; set; }
 	}
 }

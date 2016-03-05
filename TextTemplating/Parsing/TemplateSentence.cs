@@ -7,14 +7,15 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 	/// </summary>
 	public class TemplateSentence
 	{
-		public TemplateSentence(String originalText, Boolean isCommand)
+		public TemplateSentence(String text, Boolean isCommand)
 		{
 			this.IsControlCommand = isCommand;
-			this.OriginalText = originalText;
+			this.Text = text;
 		}
 		public Boolean IsControlCommand { get; set; }
-		public String OriginalText { get; set; }
+		public String Text { get; set; }
 
+		// Tracked position of this sentence:
 		public int SourceLine { get; set; }
 		public int SourcePosition { get; set; }
 
@@ -23,7 +24,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			return string.Format(@"[Line {0}:{1} {2}] {3}",
 				SourceLine, SourcePosition,
 				IsControlCommand ? "Command" : "",
-				OriginalText);
+				Text);
 		}
 	}
 }

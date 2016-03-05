@@ -7,9 +7,9 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 	/// <summary>
 	/// Contains and orchestrates logic for parsing a template text to its syntax tree form.
 	/// </summary>
-	public static class TemplateParser
+	internal static class TemplateParser
 	{
-		public static TextTemplate Parse(String template, SyntaxSettings syntax)
+		internal static TextTemplate Parse(String template, SyntaxSettings syntax)
 		{
 			var sentences = SentenceScanner.Scan(template, syntax.BeginTag, syntax.EndTag);
 			var commands = ParseSentencesToCommands(sentences, syntax);
@@ -109,7 +109,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 				case CommandType.IfElse:
 					RequireMatchingActiveCommandType(parentCommand, currentCommand, CommandType.If);
 					RequireMatchingModelPath(parentCommand, currentCommand);
-                    break;
+					break;
 				case CommandType.IfExistsElse:
 					RequireMatchingActiveCommandType(parentCommand, currentCommand, CommandType.IfExists);
 					RequireMatchingModelPath(parentCommand, currentCommand);
@@ -146,30 +146,14 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			}
 		}
 
-
-		//TODO: avoid duplication for this overloads
-		private static void RequireMatchingActiveCommandType(Command activeCommand, Command currentCommand, CommandType requiredType)
+		private static void RequireMatchingActiveCommandType(Command activeCommand, Command currentCommand, CommandType requireType, CommandType? alternativeType = null)
 		{
 			if (activeCommand == null)
 			{
 				throw new TemplateProcessingException($"Invalid template. No starting command found for '{currentCommand}'.");
 			}
 
-			Boolean isMatch = activeCommand.Type == requiredType;
-			if (!isMatch)
-			{
-				throw new TemplateProcessingException($"Invalid template. Unexpected command '{currentCommand}' does not match active command of '{activeCommand}'.");
-			}
-		}
-
-		private static void RequireMatchingActiveCommandType(Command activeCommand, Command currentCommand, CommandType requiredType1, CommandType requiredType2)
-		{
-			if (activeCommand == null)
-			{
-				throw new TemplateProcessingException($"Invalid template. No starting command found for '{currentCommand}'.");
-			}
-
-			Boolean isMatch = activeCommand.Type == requiredType1 || activeCommand.Type == requiredType2;
+			Boolean isMatch = activeCommand.Type == requireType || activeCommand.Type == alternativeType;
 			if (!isMatch)
 			{
 				throw new TemplateProcessingException($"Invalid template. Unexpected command '{currentCommand}' does not match active command of '{activeCommand}'.");
@@ -189,7 +173,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 				Debug.Assert(sentence.IsControlCommand);
 				String functionName;
 				String[] arguments;
-				if (FunctionCallParser.TryParseCommand(sentence.OriginalText, out functionName, out arguments))
+				if (FunctionCallParser.TryParseCommand(sentence.Text, out functionName, out arguments))
 				{
 					CommandType type = RecognizeFunctionName(functionName, syntax);
 					switch (type)
@@ -223,7 +207,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 				else // if it is not in function format, assume it is for querying the model:
 				{
 					var modelBindCommand = new ModelPathCommand(CommandType.BindFromModel, sentence);
-					modelBindCommand.ModelPath = sentence.OriginalText.Trim();
+					modelBindCommand.ModelPath = sentence.Text.Trim();
 					yield return modelBindCommand;
 					continue;
 				}

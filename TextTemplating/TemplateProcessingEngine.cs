@@ -52,10 +52,11 @@ namespace Nortal.Utilities.TextTemplating
 		protected ITemplateValueFormatter ValueFormatter { get; set; }
 		protected SyntaxSettings Syntax { get; set; }
 
+		[Obsolete]
 		public CultureInfo FormattingCulture
 		{
-			get { return this.ValueFormatter.Culture; }
-			set { this.ValueFormatter.Culture = value; }
+			get { throw new NotSupportedException("This feature is no longer supported. Thread culture is used instead. Custom formatting is controlled by specified IValueFormatter."); }
+			set { throw new NotSupportedException("This feature is no longer supported. Thread culture is used instead. Custom formatting is controlled by specified IValueFormatter."); }
 		}
 		#endregion
 
