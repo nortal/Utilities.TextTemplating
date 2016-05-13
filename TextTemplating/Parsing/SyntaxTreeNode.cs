@@ -25,6 +25,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 		/// </summary>
 		public List<SyntaxTreeNode> SecondaryScope { get; internal set; }
 
+
 		public override string ToString()
 		{
 			return this.Command?.ToString() ?? "<EmptyCommand>";

@@ -11,7 +11,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 	{
 		/// <summary>
 		/// Turns input into stream of sentences this template is built with.
-		/// Each sentence is either a block of content texts or a control commands to templating engine.
+		/// Each sentence is either a block of content texts or a control command to templating engine.
 		/// </summary>
 		/// <param name="template"></param>
 		/// <param name="startTag"></param>
@@ -47,13 +47,18 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 				int sentenceLength;
 				if (commandStartIndex == currentIndex)
 				{
-					if (isInCommandMode) { throw new TemplateSyntaxException("Command mode already started. Previous commands must be closed first."); }
+					if (isInCommandMode) { throw new TemplateSyntaxException("Unexpected command start tag was found on line " + lineCount + ". Close previous command tag before starting a new one."); }
 					isInCommandMode = true;
 					sentenceLength = startTag.Length;
 				}
 				else if (commandEndIndex == currentIndex)
 				{
-					if (!isInCommandMode) { throw new TemplateSyntaxException("Unexpected command end before a command start."); }
+					if (!isInCommandMode)
+					{
+						// find out which line was the problem for more accurate error message:
+						IncrementLineCountByLineFeeds(template, currentIndex, NoResultIndex, ref lineCount, ref lastLineFeedIndex, ref nextLineFeedIndex);
+						throw new TemplateSyntaxException("Unexpected command end tag was found on line " + lineCount + " without a command start tag.");
+					}
 					isInCommandMode = false;
 					sentenceLength = endTag.Length;
 				}
@@ -76,15 +81,20 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 					yield return sentence;
 				}
 
-				// update linefeed count and index for next round:
-				while (nextLineFeedIndex < currentIndex && nextLineFeedIndex != NoResultIndex)
-				{
-					lineCount++;
-					lastLineFeedIndex = nextLineFeedIndex;
-					nextLineFeedIndex = template.IndexOf(Environment.NewLine, lastLineFeedIndex + 1);
-				}
+				IncrementLineCountByLineFeeds(template, currentIndex, NoResultIndex, ref lineCount, ref lastLineFeedIndex, ref nextLineFeedIndex);
 				currentIndex += sentenceLength; // sentence consumed, moving cursor ahead.
 				Debug.Assert(currentIndex <= template.Length);
+			}
+		}
+
+		private static void IncrementLineCountByLineFeeds(String template, Int32 currentIndex, Int32 NoResultIndex, ref Int32 lineCount, ref Int32 lastLineFeedIndex, ref Int32 nextLineFeedIndex)
+		{
+			// update linefeed count and index for next round:
+			while (nextLineFeedIndex < currentIndex && nextLineFeedIndex != NoResultIndex)
+			{
+				lineCount++;
+				lastLineFeedIndex = nextLineFeedIndex;
+				nextLineFeedIndex = template.IndexOf(Environment.NewLine, lastLineFeedIndex + 1);
 			}
 		}
 	}

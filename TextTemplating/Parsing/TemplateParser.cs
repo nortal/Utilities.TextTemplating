@@ -85,7 +85,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 			// verify no scope is left unclosed:
 			if (scopeCollector.ActiveCommand != null)
 			{
-				throw new TemplateSyntaxException(scopeCollector.ActiveCommand, "Started scoped command was not properly closed with and ending tag.");
+				throw new TemplateSyntaxException(scopeCollector.ActiveCommand, "Expected scope ending command was not found.");
 			}
 
 			// bring scope items under a single tree root:
@@ -142,7 +142,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 
 			if (activeModelPathCommand.ModelPath != currentModelPathCommand.ModelPath)
 			{
-				throw new TemplateSyntaxException(activeCommand, $"Scope boundary commands do not match: '{activeCommand}' vs '{currentCommand}'.");
+				throw new TemplateSyntaxException(currentCommand, $"Scope boundary commands do not match: '{activeCommand}' vs '{currentCommand}'.");
 			}
 		}
 
@@ -150,7 +150,7 @@ namespace Nortal.Utilities.TextTemplating.Parsing
 		{
 			if (activeCommand == null)
 			{
-				throw new TemplateSyntaxException(currentCommand, $"Invalid template. No starting command found for '{currentCommand}'.");
+				throw new TemplateSyntaxException(currentCommand, $"No starting command found for '{currentCommand}'.");
 			}
 
 			Boolean isMatch = activeCommand.Type == requireType || activeCommand.Type == alternativeType;

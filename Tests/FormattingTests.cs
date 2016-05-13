@@ -1,19 +1,19 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Globalization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
 
 namespace Nortal.Utilities.TextTemplating.Tests
 {
 	[TestClass]
-	public class FromattingTests
+	public class FormattingTests
 	{
-		
 		private CultureInfo OriginalCulture { get; set; }
 
 		[TestInitialize]
 		public void Initialize()
 		{
+			// this is not isolated enough from other tests. 
 			this.OriginalCulture = CultureInfo.CurrentCulture;
 			Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("et-ee");
 		}
@@ -21,7 +21,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		[TestCleanup]
 		public void TearDown()
 		{
-			Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("et-ee");
+			Thread.CurrentThread.CurrentCulture = OriginalCulture;
 		}
 
 		[TestMethod]

@@ -22,6 +22,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestLoopSimple()
 		{
 			var model = new LoopTestModel("root");
@@ -44,6 +45,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestLoopWithindocuments()
 		{
 			var model = new LoopTestModel("root");
@@ -66,6 +68,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestLoopNestedSimple()
 		{
 			var model = new LoopTestModel("root");
@@ -111,6 +114,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestLoopNestedWithMixedLevelFields()
 		{
 			var model = new LoopTestModel("root");

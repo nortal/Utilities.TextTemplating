@@ -47,11 +47,14 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Categories.cs" />
     <Compile Include="ConditionalReplacementTests.cs" />
     <Compile Include="PerformanceTests.cs" />
     <Compile Include="SelfReferenceTests.cs" />
@@ -59,10 +62,11 @@
     <Compile Include="LoopReplacementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FieldReplacementTests.cs" />
-    <Compile Include="FromattingTests.cs" />
+    <Compile Include="FormattingTests.cs" />
     <Compile Include="ReflectionBasedValueExtractorTests.cs" />
     <Compile Include="SubtemplatingTests.cs" />
     <Compile Include="SyntaxValidationTests.cs" />
+    <Compile Include="LexerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TextTemplating\Nortal.Utilities.TextTemplating.csproj">

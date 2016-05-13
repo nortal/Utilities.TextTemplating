@@ -7,6 +7,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 	public class SubtemplatingTests
 	{
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestSubTemplate()
 		{
 			var model = new

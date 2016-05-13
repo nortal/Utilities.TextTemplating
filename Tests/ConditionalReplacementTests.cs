@@ -15,6 +15,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		private const String WrongToken = @"WRONG";
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestConditionalIfTrue()
 		{
 			var model = new { ValueTrue = true };
@@ -32,6 +33,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestConditionalIfFalse()
 		{
 			var model = new { ValueFalse = false };
@@ -48,6 +50,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestConditionalIfTrueNullable()
 		{
 			var model = new { ValueTrue = (Boolean?)true };
@@ -65,6 +68,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestConditionalIfElseTrue()
 		{
 			var model = new { ValueTrue = true };
@@ -83,6 +87,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestConditionalIfElseFalse()
 		{
 			var model = new { ValueFalse = false };
@@ -101,6 +106,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestConditionalNull()
 		{
 			var model = new { Value = (Boolean?)null };
@@ -119,6 +125,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		[ExpectedException(typeof(TemplateProcessingException))]
 		public void TestConditionalInvalidCondition()
 		{
@@ -134,6 +141,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestConditionalSameIfMultipleTimes()
 		{
 			var model = new { ValueTrue = true };
@@ -153,6 +161,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestConditionalNestedTrueThenFalse()
 		{
 			var model = new
@@ -178,6 +187,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestFieldsReplacedInConditional()
 		{
 			var model = new
@@ -200,6 +210,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestExistsConditionalIfTrue()
 		{
 			var model = new { Value = "this value is not null" };
@@ -217,6 +228,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestExistsConditionalIfFalse()
 		{
 			var model = new { Value = (String)null };
@@ -234,6 +246,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		}
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestExistsConditionalIfElseFalse()
 		{
 			var model = new { Value = (String)null };
@@ -253,6 +266,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 
 
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestExistsCollectionConditionalIfTrue()
 		{
 			var model = new List<DictionaryEntry>()
@@ -282,6 +296,7 @@ namespace Nortal.Utilities.TextTemplating.Tests
 		/// This is a typical scenario where by "ifexists(collection)" we want to test if there are items.
 		/// </summary>
 		[TestMethod]
+		[TestCategory(Categories.Commands)]
 		public void TestExistsCollectionConditionalIfEmpty()
 		{
 			List<DictionaryEntry> model = new List<DictionaryEntry>(0);
