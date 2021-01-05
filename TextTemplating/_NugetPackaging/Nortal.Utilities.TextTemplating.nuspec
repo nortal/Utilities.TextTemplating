@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0"?>
-<package >
-	<metadata>
+<package>
+	<metadata minClientVersion="4.9.0">
 		<id>Nortal.Utilities.TextTemplating</id>
 		<version>0.11.0-alpha-1</version>
 		<title>Nortal.Utilities.TextTemplating</title>
@@ -8,11 +8,11 @@
 		<owners>Imre Pühvel, AS Nortal</owners>
 		<iconUrl>http://www.nortal.com/_gfx/logo-32x32.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
+		<license type="expression">Apache-2.0</license>
 		<summary>Easy-to-use lightweight templating engine for generating text-based documents in code.</summary>
 		<description>
-Easy-to-use lightweight templating engine for generating text-based documents by injecting values from .net object to a text-based template.
-Supports conditional bocks, loops, subtemplates, etc. For documentation and examples see https://github.com/nortal/Utilities.TextTemplating.
+			Easy-to-use lightweight templating engine for generating text-based documents by injecting values from .net object to a text-based template.
+			Supports conditional bocks, loops, subtemplates, etc. For documentation and examples see https://github.com/nortal/Utilities.TextTemplating.
 		</description>
 		<projectUrl>https://github.com/nortal/Utilities.TextTemplating</projectUrl>
 		<releaseNotes></releaseNotes>
