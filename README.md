@@ -4,7 +4,7 @@ Nortal.Utilities.TextTemplating
 This assembly provides a text template processing engine capable of merging data from objects (the model) to a text-based template (text, html, xml, ..).
 
 Requirements:
- * Microsoft .Net Framework 3.5 Client Profile.
+* .Net Standard 2.0 requirements (https://dotnet.microsoft.com/platform/dotnet-standard#versions)
 
 Main features
 -------------
