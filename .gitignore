@@ -13,3 +13,5 @@ TestResults
 # NuGet Packages Directory
 packages
 
+# AssemblyVersioning output
+AssemblyInformationalVersion.gen.cs
