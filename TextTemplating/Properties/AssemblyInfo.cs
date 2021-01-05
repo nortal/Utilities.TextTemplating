@@ -32,5 +32,5 @@ Requires .Net Framework 3.5 client profile+.")]
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]
 
-[assembly: AssemblyVersion("0.10.0")]
+[assembly: AssemblyVersion("0.11.0")]
 
